@@ -21,9 +21,9 @@ public class TokenService : ITokenService
         
         var claims = new List<Claim>
         {
-            new Claim(ClaimTypes.NameIdentifier, applicationUser.Id),
-            new Claim(ClaimTypes.Name, applicationUser.UserName!),
-            new Claim(ClaimTypes.Email, applicationUser.Email!)
+            new (ClaimTypes.NameIdentifier, applicationUser.Id),
+            new (ClaimTypes.Name, applicationUser.UserName!),
+            new (ClaimTypes.Email, applicationUser.Email!)
         };
 
         var key = new SymmetricSecurityKey(
