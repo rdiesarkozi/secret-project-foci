@@ -3,7 +3,9 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using WebAPI.Client;
 using WebAPI.Interfaces;
+using WebAPI.Mappers;
 using WebAPI.Models;
 using WebAPI.Services;
 
@@ -17,6 +19,14 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<ISportsApiClient, SportsApiClient>();
+builder.Services.AddScoped<IFixtureDataService, FixtureDataService>();
+builder.Services.AddScoped<IRawFixturesToDtoMapper, RawFixturesToDtoMapper>();
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
+    });
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
