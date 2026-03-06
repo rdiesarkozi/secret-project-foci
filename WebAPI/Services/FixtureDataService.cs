@@ -56,4 +56,30 @@ public class FixtureDataService : IFixtureDataService
         var fixtureDataDto = fixtureDataDtos.FirstOrDefault(x => x.FixtureId == fixtureId);
         return fixtureDataDto;
     }
+
+    public async Task<List<FixtureDataDto>> GetFixtureDataByDateAsync(DateTime date, int league, int season)
+    {
+        var cacheKey = $"fixtures_{league}_{season}_{date:yyyy-MM-dd}";
+        var cachedBytes = await _cache.GetAsync(cacheKey);
+        if (cachedBytes is not null)
+        {
+            return JsonSerializer.Deserialize<List<FixtureDataDto>>(cachedBytes)!;
+        }
+        
+        var rawFixtureData = _sportsApiClient.GetAllFixturesByLeagueAsync(league, season, CancellationToken.None).Result;
+        var fixtureDataDtos = _rawFixturesToDtoMapper.MapRawFixtureToDto(rawFixtureData);
+        var filteredFixtures = fixtureDataDtos.Where(x => x.FixtureDate.Date == date.Date).ToList();
+        
+        var cacheOptions = new DistributedCacheEntryOptions
+        {
+            AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(1)
+        };
+        
+        await _cache.SetAsync(
+            cacheKey,
+            JsonSerializer.SerializeToUtf8Bytes(filteredFixtures),
+            cacheOptions);
+        
+        return filteredFixtures;
+    }
 }

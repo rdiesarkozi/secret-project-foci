@@ -35,6 +35,13 @@ public class FixtureController : ControllerBase
         }
 
         return Ok(fixtureData);
+    }
 
+    [HttpGet("resultsbydate")]
+    public async Task<IActionResult> GetFixtureByDate([FromQuery] DateTime date, [FromQuery] int league = 39,
+        [FromQuery] int season = 2022)
+    {
+        var fixtureData = await _fixtureDataService.GetFixtureDataByDateAsync(date, league, season);
+        return Ok(fixtureData);
     }
 }
