@@ -1,8 +1,4 @@
-using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Caching.Distributed;
-using RestSharp;
-using WebAPI.Client;
 using WebAPI.Interfaces;
 
 namespace WebAPI.Controllers;
@@ -42,6 +38,18 @@ public class FixtureController : ControllerBase
         [FromQuery] int season = 2022)
     {
         var fixtureData = await _fixtureDataService.GetFixtureDataByDateAsync(date, league, season);
+        return Ok(fixtureData);
+    }
+    
+    [HttpGet("resultsbymatchid")]
+    public async Task<IActionResult> GetFixtureByMatchId([FromQuery] long matchId)
+    {
+        var fixtureData = await _fixtureDataService.GetFixturesResultByMatchIdAsync(matchId);
+        if (fixtureData == null)
+        {
+            return NotFound();
+        }
+
         return Ok(fixtureData);
     }
 }

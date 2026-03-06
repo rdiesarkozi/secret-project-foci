@@ -82,4 +82,33 @@ public class FixtureDataService : IFixtureDataService
         
         return filteredFixtures;
     }
+
+    public async Task<FixtureDataDto> GetFixturesResultByMatchIdAsync(long matchId)
+    {
+        var cacheKey = $"fixture_result_{matchId}";
+        var cachedBytes = await _cache.GetAsync(cacheKey);
+        
+        if (cachedBytes is not null)        {
+            return JsonSerializer.Deserialize<FixtureDataDto>(cachedBytes)!;
+        }
+        
+        var rawFixtureData = _sportsApiClient.GetAllFixturesByLeagueAsync(39, 2022, CancellationToken.None).Result;
+        var fixtureDataDtos = _rawFixturesToDtoMapper.MapRawFixtureToDto(rawFixtureData);
+        var fixtureDataDto = fixtureDataDtos.FirstOrDefault(x => x.FixtureId == matchId);
+        
+        if (fixtureDataDto is not null)
+        {
+            var cacheOptions = new DistributedCacheEntryOptions
+            {
+                AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(1)
+            };
+            
+            await _cache.SetAsync(
+                cacheKey,
+                JsonSerializer.SerializeToUtf8Bytes(fixtureDataDto),
+                cacheOptions);
+        }
+        
+        return fixtureDataDto;
+    }
 }

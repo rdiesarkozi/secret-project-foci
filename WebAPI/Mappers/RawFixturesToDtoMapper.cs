@@ -14,6 +14,7 @@ public class RawFixturesToDtoMapper : IRawFixturesToDtoMapper
             var fixtureDataDto = new FixtureDataDto
             {
                 FixtureId = item.Fixture.Id,
+                Status = item.Fixture.Status.Short,
                 AwayScore = item.Goals.Away,
                 HomeScore = item.Goals.Home,
                 FixtureDate = item.Fixture.Date,

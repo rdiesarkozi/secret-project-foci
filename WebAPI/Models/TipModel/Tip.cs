@@ -16,6 +16,10 @@ public class Tip
     
     public int PredictedAwayScore { get; set; }
     
+    public int? ActualHomeScore { get; set; }
+    
+    public int? ActualAwayScore { get; set; }
+    
     public DateTime SubmittedAtUtc { get; set; }
     
     public DateTime? LockedAtUtc { get; set; }

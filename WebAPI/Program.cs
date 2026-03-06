@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using WebAPI.Client;
 using WebAPI.Interfaces;
 using WebAPI.Mappers;
@@ -22,6 +23,8 @@ builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<ISportsApiClient, SportsApiClient>();
 builder.Services.AddScoped<IFixtureDataService, FixtureDataService>();
 builder.Services.AddScoped<IRawFixturesToDtoMapper, RawFixturesToDtoMapper>();
+builder.Services.AddScoped<ITipService, TipService>();
+
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
     {
@@ -63,6 +66,36 @@ builder.Services.AddAuthentication(options =>
         options.Configuration = builder.Configuration["Redis:ConnectionString"];
         options.InstanceName = builder.Configuration["Redis:InstanceName"];
     });
+
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "WebAPI", Version = "v1" });
+
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Description = "JWT Authorization header using the Bearer scheme. Enter your token below.",
+        Name = "Authorization",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.Http,
+        Scheme = "bearer",
+        BearerFormat = "JWT"
+    });
+
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            Array.Empty<string>()
+        }
+    });
+});
 
 var app = builder.Build();
 
