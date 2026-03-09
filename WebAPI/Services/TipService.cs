@@ -92,15 +92,47 @@ public class TipService : ITipService
     
     private int CalculatePoints(Tip tip)
     {
-        if (tip.ActualHomeScore == tip.PredictedHomeScore && tip.ActualAwayScore == tip.PredictedAwayScore)
+        var actualHome = tip.ActualHomeScore!.Value;
+        var actualAway = tip.ActualAwayScore!.Value;
+        var predictedHome = tip.PredictedHomeScore;
+        var predictedAway = tip.PredictedAwayScore;
+
+        // Telitalálat (Exact score): 8 points
+        if (actualHome == predictedHome && actualAway == predictedAway)
         {
-            return 3; // Exact score
+            return 8;
         }
         
-        var actualOutcome = GetMatchOutcome(tip.ActualHomeScore.Value, tip.ActualAwayScore.Value);
-        var predictedOutcome = GetMatchOutcome(tip.PredictedHomeScore, tip.PredictedAwayScore);
+        var actualOutcome = GetMatchOutcome(actualHome, actualAway);
+        var predictedOutcome = GetMatchOutcome(predictedHome, predictedAway);
         
-        return actualOutcome == predictedOutcome ? 1 : 0; // Correct outcome but not exact score
+        // Kimenetel (1X2) és gólkülönbség pontszáma: 6 points
+        if (actualOutcome == predictedOutcome)
+        {
+            var actualGoalDifference = actualHome - actualAway;
+            var predictedGoalDifference = predictedHome - predictedAway;
+            
+            if (actualGoalDifference == predictedGoalDifference)
+            {
+                return 6;
+            }
+            
+            // Kimenetel (1X2) pontszáma: 4 points
+            return 4;
+        }
+        
+        // Egyik csapat góljai pontszáma: 1 point each
+        int points = 0;
+        if (actualHome == predictedHome)
+        {
+            points += 1;
+        }
+        if (actualAway == predictedAway)
+        {
+            points += 1;
+        }
+        
+        return points;
     }
     
     private int GetMatchOutcome(int homeScore, int awayScore)
@@ -112,8 +144,10 @@ public class TipService : ITipService
 
     private string DetermineResultStatus(Tip tip)
     {
-        if (tip.AwardedPoints == 3) return "Exact";
-        if (tip.AwardedPoints == 1) return "Correct Outcome";
-        return "Incorrect";
+        if (tip.AwardedPoints == 8) return "Telitalálat";
+        if (tip.AwardedPoints == 6) return "Kimenetel + Gólkülönbség";
+        if (tip.AwardedPoints == 4) return "Kimenetel";
+        if (tip.AwardedPoints > 0) return "Részleges";
+        return "Hibás";
     }
 }
