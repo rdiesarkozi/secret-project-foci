@@ -25,6 +25,7 @@ builder.Services.AddScoped<IFixtureDataService, FixtureDataService>();
 builder.Services.AddScoped<IRawFixturesToDtoMapper, RawFixturesToDtoMapper>();
 builder.Services.AddScoped<ITipService, TipService>();
 builder.Services.AddScoped<IGroupService, GroupService>();
+builder.Services.AddScoped<ILeaderboardService, LeaderboardService>();
 
 builder.Services.AddControllers()
     .AddJsonOptions(options =>

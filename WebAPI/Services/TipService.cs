@@ -73,18 +73,42 @@ public class TipService : ITipService
             .Where(t => t.ResultStatus == "Pending")
             .ToListAsync();
 
+        // Collect user points to update
+        var userPointsToAdd = new Dictionary<string, int>();
+
         foreach (var tip in pendingTips)
         {
-            // Fetch actual result from external API or your Match table
             var matchResult = await _footballApiService.GetFixturesResultByMatchIdAsync(tip.MatchId);
-        
-            if (matchResult.Status != "FT") continue; // Match not finished
-        
+
+            if (matchResult.Status != "FT") continue;
+
             tip.ActualHomeScore = matchResult.HomeScore;
             tip.ActualAwayScore = matchResult.AwayScore;
             tip.AwardedPoints = CalculatePoints(tip);
             tip.ResultStatus = DetermineResultStatus(tip);
             tip.SubmittedAtUtc = DateTime.UtcNow;
+
+            // Accumulate points per user
+            if (tip.AwardedPoints > 0)
+            {
+                if (userPointsToAdd.ContainsKey(tip.UserId))
+                    userPointsToAdd[tip.UserId] += tip.AwardedPoints.Value;
+                else
+                    userPointsToAdd[tip.UserId] = tip.AwardedPoints.Value;
+            }
+        }
+
+        // Update GroupMember points for all affected users
+        foreach (var (userId, points) in userPointsToAdd)
+        {
+            var memberships = await _dbContext.GroupMembers
+                .Where(gm => gm.UserId == userId)
+                .ToListAsync();
+
+            foreach (var member in memberships)
+            {
+                member.Points += points;
+            }
         }
 
         await _dbContext.SaveChangesAsync();
@@ -92,12 +116,14 @@ public class TipService : ITipService
     
     private int CalculatePoints(Tip tip)
     {
+        int points = 0;
+
         var actualHome = tip.ActualHomeScore!.Value;
         var actualAway = tip.ActualAwayScore!.Value;
         var predictedHome = tip.PredictedHomeScore;
         var predictedAway = tip.PredictedAwayScore;
 
-        // Telitalálat (Exact score): 8 points
+        // (Exact score): 8 points
         if (actualHome == predictedHome && actualAway == predictedAway)
         {
             return 8;
@@ -106,23 +132,22 @@ public class TipService : ITipService
         var actualOutcome = GetMatchOutcome(actualHome, actualAway);
         var predictedOutcome = GetMatchOutcome(predictedHome, predictedAway);
         
-        // Kimenetel (1X2) és gólkülönbség pontszáma: 6 points
         if (actualOutcome == predictedOutcome)
         {
             var actualGoalDifference = actualHome - actualAway;
             var predictedGoalDifference = predictedHome - predictedAway;
             
+            // Correct outcome (1X2) + correct goal difference: 6 points
             if (actualGoalDifference == predictedGoalDifference)
             {
                 return 6;
             }
             
-            // Kimenetel (1X2) pontszáma: 4 points
-            return 4;
+            // Correct outcome (1X2) only: 4 points
+            points = 4;
         }
         
-        // Egyik csapat góljai pontszáma: 1 point each
-        int points = 0;
+        // Correct goals for one team: 1 point each
         if (actualHome == predictedHome)
         {
             points += 1;
@@ -144,10 +169,10 @@ public class TipService : ITipService
 
     private string DetermineResultStatus(Tip tip)
     {
-        if (tip.AwardedPoints == 8) return "Telitalálat";
-        if (tip.AwardedPoints == 6) return "Kimenetel + Gólkülönbség";
-        if (tip.AwardedPoints == 4) return "Kimenetel";
-        if (tip.AwardedPoints > 0) return "Részleges";
-        return "Hibás";
+        if (tip.AwardedPoints == 8) return "Exact";
+        if (tip.AwardedPoints == 6) return "Correct Outcome + Goal Difference";
+        if (tip.AwardedPoints >= 4) return "Correct Outcome";
+        if (tip.AwardedPoints > 0) return "Partial";
+        return "Incorrect";
     }
 }

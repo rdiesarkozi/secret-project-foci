@@ -32,22 +32,37 @@ public class GroupService : IGroupService
             Role = GroupRole.Owner.ToString(),
             JoinedAtUtc = DateTime.UtcNow,
         };
-
+        
+        var leaderboardEntry = new GroupLeaderboardEntry
+        {
+            Id = Guid.NewGuid(),
+            GroupId = group.Id,
+            UserId = creatorId,
+            Period = "AllTime",
+            PeriodKey = DateTime.UtcNow.Year.ToString(),
+            Points = 0,
+            Rank = 1,
+            UpdatedAtUtc = DateTime.UtcNow
+        };
+        
         await _context.Groups.AddAsync(group);
         await _context.GroupMembers.AddAsync(owner);
+        await _context.GroupLeaderboardEntries.AddAsync(leaderboardEntry);
         await _context.SaveChangesAsync();
 
         return group;
     }
 
-    public Task<Group?> GetGroupById(int groupId)
+    public async Task<Group?> GetGroupById(Guid groupId)
     {
-        throw new NotImplementedException();
+        return await _context.Groups
+            .FirstOrDefaultAsync(g => g.Id == groupId);
     }
 
-    public Task<Group?> GetGroupByJoinCode(string joinCode)
+    public async Task<Group?> GetGroupByJoinCode(string joinCode)
     {
-        throw new NotImplementedException();
+        return await _context.Groups
+            .FirstOrDefaultAsync(g => g.JoinCode == joinCode);
     }
 
     public async Task<IEnumerable<Group>> GetUserGroups(string userId)
@@ -81,8 +96,21 @@ public class GroupService : IGroupService
             Role = GroupRole.Member.ToString(),
             JoinedAtUtc = DateTime.UtcNow
         };
+        
+        var leaderboardEntry = new GroupLeaderboardEntry
+        {
+            Id = Guid.NewGuid(),
+            GroupId = group.Id,
+            UserId = userId,
+            Period = "AllTime",
+            PeriodKey = DateTime.UtcNow.Year.ToString(),
+            Points = 0,
+            Rank = 0,
+            UpdatedAtUtc = DateTime.UtcNow
+        };
 
         await _context.GroupMembers.AddAsync(member);
+        await _context.GroupLeaderboardEntries.AddAsync(leaderboardEntry);
         await _context.SaveChangesAsync();
 
         return member;

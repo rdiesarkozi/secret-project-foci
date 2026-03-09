@@ -1,3 +1,5 @@
+using Microsoft.EntityFrameworkCore;
+using WebAPI.Dto;
 using WebAPI.Interfaces;
 using WebAPI.Models.Group;
 
@@ -5,23 +7,30 @@ namespace WebAPI.Services;
 
 public class LeaderboardService : ILeaderboardService
 {
-    public Task<IEnumerable<GroupLeaderboardEntry>> GetLeaderboardAsync(int groupId, int? seasonId = null, int? matchdayId = null)
+    private readonly AppDbContext _dbContext;
+    
+    public LeaderboardService(AppDbContext dbContext)
     {
-        throw new NotImplementedException();
+        _dbContext = dbContext;
     }
-
-    public Task UpdateUserPointsAsync(int groupId, string oddsId, int points)
+    
+    public async Task<List<LeaderboardDto>> GetLeaderboardAsync(Guid groupId)
     {
-        throw new NotImplementedException();
-    }
+        var members = await _dbContext.GroupMembers
+            .Where(gm => gm.GroupId == groupId)
+            .OrderByDescending(gm => gm.Points)
+            .Select(gm => new LeaderboardDto
+            {
+                Username = gm.User.UserName,
+                Points = gm.Points
+            })
+            .ToListAsync();
 
-    public Task RecalculateLeaderboardAsync(int groupId, int? seasonId = null)
-    {
-        throw new NotImplementedException();
-    }
+        for (int i = 0; i < members.Count; i++)
+        {
+            members[i].Rank = i + 1;
+        }
 
-    public Task RecalculateAllLeaderboardsAsync()
-    {
-        throw new NotImplementedException();
+        return members;
     }
 }

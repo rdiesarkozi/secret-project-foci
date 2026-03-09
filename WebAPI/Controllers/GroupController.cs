@@ -87,4 +87,24 @@ public class GroupController : ControllerBase
         
         return Ok(groupDtos);
     }
+
+    [HttpGet("join-code/{joinCode}")]
+    public async Task<IActionResult> GetGroupByJoinCodeAsync(string joinCode)
+    {
+        var group = await _groupService.GetGroupByJoinCode(joinCode);
+        
+        if (group == null)
+        {
+            return NotFound("Group not found for the provided join code.");
+        }
+        
+        return Ok(new GroupDto
+        {
+            Id = group.Id,
+            Name = group.Name,
+            JoinCode = group.JoinCode,
+            Visibility = group.Visibility,
+            CreatedAtUtc = group.CreatedAtUtc
+        });
+    }
 }

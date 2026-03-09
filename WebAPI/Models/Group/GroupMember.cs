@@ -12,6 +12,8 @@ public class GroupMember
     
     public ApplicationUser User { get; set; }
     
+    public int Points { get; set; }
+    
     public string Role { get; set; }
     
     public DateTime JoinedAtUtc { get; set; }
