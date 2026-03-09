@@ -13,8 +13,4 @@ public interface IGroupService
     public Task<IEnumerable<Group>> GetUserGroups(string userId);
     
     public Task<GroupMember?> JoinGroupByCodeAsync(string joinCode, string userId);
-    
-    public Task<string> GenerateUniqueJoinCodeAsync(int groupId);
-
-
 }

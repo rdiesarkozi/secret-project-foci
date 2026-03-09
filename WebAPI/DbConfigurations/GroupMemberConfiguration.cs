@@ -20,8 +20,6 @@ public class GroupMemberConfiguration : IEntityTypeConfiguration<GroupMember>
         
         builder.Property(x => x.JoinedAtUtc).IsRequired();
         
-        builder.Property(x => x.Status).HasMaxLength(20).IsRequired();
-        
         builder.HasOne(x => x.Group)
             .WithMany(g => g.Members)
             .HasForeignKey(x => x.GroupId)

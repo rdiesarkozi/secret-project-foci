@@ -24,6 +24,7 @@ builder.Services.AddScoped<ISportsApiClient, SportsApiClient>();
 builder.Services.AddScoped<IFixtureDataService, FixtureDataService>();
 builder.Services.AddScoped<IRawFixturesToDtoMapper, RawFixturesToDtoMapper>();
 builder.Services.AddScoped<ITipService, TipService>();
+builder.Services.AddScoped<IGroupService, GroupService>();
 
 builder.Services.AddControllers()
     .AddJsonOptions(options =>

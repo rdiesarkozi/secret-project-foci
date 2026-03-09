@@ -15,6 +15,4 @@ public class GroupMember
     public string Role { get; set; }
     
     public DateTime JoinedAtUtc { get; set; }
-    
-    public String Status { get; set; } 
 }
