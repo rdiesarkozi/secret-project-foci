@@ -64,6 +64,24 @@ public class GroupController : ControllerBase
         });
     }
 
+    [HttpGet("{groupId}")]
+    public async Task<IActionResult> GetGroupByIdAsync(Guid groupId)
+    {
+        var group = await _groupService.GetGroupById(groupId);
+        if (group == null)
+        {
+            return NotFound("Group not found.");
+        }
+        return Ok(new GroupDto
+        {
+            Id = group.Id,
+            Name = group.Name,
+            JoinCode = group.JoinCode,
+            Visibility = group.Visibility,
+            CreatedAtUtc = group.CreatedAtUtc
+        });
+    }
+
     [HttpGet("my-groups")]
     public async Task<IActionResult> GetUserGroupsAsync()
     {

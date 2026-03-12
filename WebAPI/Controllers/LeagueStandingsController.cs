@@ -23,6 +23,7 @@ public class LeagueStandingsController : ControllerBase
         var cacheKey = $"standings_{league}_{season}";
 
         var cachedData = await _cache.GetStringAsync(cacheKey);
+        
         if (!string.IsNullOrEmpty(cachedData))
         {
             var cachedJson = JsonSerializer.Deserialize<JsonElement>(cachedData);
@@ -36,6 +37,7 @@ public class LeagueStandingsController : ControllerBase
 
         var client = new RestClient(options);
         var request = new RestRequest("/standings", Method.Get);
+        
         request.AddHeader("x-apisports-key", ApiKey);
         request.AddQueryParameter("league", league.ToString());
         request.AddQueryParameter("season", season.ToString());

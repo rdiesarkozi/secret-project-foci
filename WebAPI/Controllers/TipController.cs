@@ -71,7 +71,63 @@ public class TipController : ControllerBase
             return StatusCode(500, "An error occurred while retrieving the tip.");
         }
     }
-    
+
+    [HttpDelete("delete")]
+    public async Task<IActionResult> DeleteTip(int fixtureId)
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        if (string.IsNullOrEmpty(userId))
+        {
+            return Unauthorized("User ID not found in claims.");
+        }
+
+        try
+        {
+            await _tipService.DeleteTipAsync(fixtureId, userId);
+            return Ok("Tip deleted successfully.");
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error deleting tip");
+            return StatusCode(500, "An error occurred while deleting the tip.");
+        }
+    }
+
+    [HttpPut("update")]
+    public async Task<IActionResult> UpdateTip(int fixtureId, int homeScoreTip, int awayScoreTip)
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        
+        if (string.IsNullOrEmpty(userId))
+        {
+            return Unauthorized("User ID not found in claims.");
+        }
+        
+        try
+        {
+            await _tipService.UpdateTipAsync(fixtureId, userId, homeScoreTip.ToString(), awayScoreTip.ToString());
+            return Ok("Tip updated successfully.");
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error updating tip");
+            return StatusCode(500, "An error occurred while updating the tip.");
+        }
+    }
+
     [HttpGet("calculate")]
     public async Task<IActionResult> CalculatePointsForCompletedMatches()
     {

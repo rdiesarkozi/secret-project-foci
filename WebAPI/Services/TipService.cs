@@ -44,14 +44,64 @@ public class TipService : ITipService
         await _dbContext.SaveChangesAsync();
     }
 
-    public Task UpdateTipAsync(int fixtureId, string userId, string homeScoreTip, string awayScoreTip)
+    public async Task UpdateTipAsync(int fixtureId, string userId, string homeScoreTip, string awayScoreTip)
     {
-        throw new NotImplementedException();
+        var tip = await _dbContext.Tips
+            .FirstOrDefaultAsync(t => t.MatchId == fixtureId && t.UserId == userId);
+
+        if (tip == null)
+        {
+            throw new InvalidOperationException("Tip not found.");
+        }
+
+        // Only allow update if the tip hasn't been processed
+        if (tip.ResultStatus != "Pending")
+        {
+            throw new InvalidOperationException("Cannot update a tip that has already been processed.");
+        }
+
+        // Prevent updates to explicitly locked tips
+        if (tip.LockedAtUtc != null)
+        {
+            throw new InvalidOperationException("Cannot update a locked tip.");
+        }
+
+        if (!int.TryParse(homeScoreTip, out var parsedHome) || parsedHome < 0)
+        {
+            throw new ArgumentException("Invalid home score.", nameof(homeScoreTip));
+        }
+
+        if (!int.TryParse(awayScoreTip, out var parsedAway) || parsedAway < 0)
+        {
+            throw new ArgumentException("Invalid away score.", nameof(awayScoreTip));
+        }
+
+        tip.PredictedHomeScore = parsedHome;
+        tip.PredictedAwayScore = parsedAway;
+        tip.SubmittedAtUtc = DateTime.UtcNow;
+
+        _dbContext.Tips.Update(tip);
+        await _dbContext.SaveChangesAsync();
     }
 
-    public Task DeleteTipAsync(int fixtureId, string userId)
+    public async Task DeleteTipAsync(int fixtureId, string userId)
     {
-        throw new NotImplementedException();
+        var tip = await _dbContext.Tips
+            .FirstOrDefaultAsync(t => t.MatchId == fixtureId && t.UserId == userId);
+
+        if (tip == null)
+        {
+            throw new InvalidOperationException("Tip not found.");
+        }
+
+        // Only allow deletion if the tip hasn't been processed
+        if (tip.ResultStatus != "Pending")
+        {
+            throw new InvalidOperationException("Cannot delete a tip that has already been processed.");
+        }
+
+        _dbContext.Tips.Remove(tip);
+        await _dbContext.SaveChangesAsync();
     }
 
     public Task<Tip> GetTipByIdAsync(int fixtureId, string userId)
