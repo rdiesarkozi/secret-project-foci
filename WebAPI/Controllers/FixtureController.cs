@@ -42,9 +42,9 @@ public class FixtureController : ControllerBase
     }
     
     [HttpGet("resultsbymatchid")]
-    public async Task<IActionResult> GetFixtureByMatchId([FromQuery] long matchId)
+    public async Task<IActionResult> GetFixtureByMatchId([FromQuery] long matchId, [FromQuery] int league = 39, [FromQuery] int season = 2022)
     {
-        var fixtureData = await _fixtureDataService.GetFixturesResultByMatchIdAsync(matchId);
+        var fixtureData = await _fixtureDataService.GetFixturesResultByMatchIdAsync(matchId, league, season );
         if (fixtureData == null)
         {
             return NotFound();

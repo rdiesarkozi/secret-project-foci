@@ -21,7 +21,7 @@ public class TipController : ControllerBase
     }
 
     [HttpPost("create")]
-    public async Task<IActionResult> CreateTip(int fixtureId, int homeScoreTip, int awayScoreTip)
+    public async Task<IActionResult> CreateTip(int fixtureId, int leagueId, int seasonId, int homeScoreTip, int awayScoreTip)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
@@ -30,20 +30,10 @@ public class TipController : ControllerBase
             return Unauthorized("User ID not found in claims.");
         }
 
-        try
-        {
-            await _tipService.CreateTipAsync(fixtureId, userId, homeScoreTip, awayScoreTip);
-            return Ok("Tip created successfully.");
-        }
-        catch (InvalidOperationException ex)
-        {
-            return BadRequest(ex.Message);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error creating tip");
-            return StatusCode(500, "An error occurred while creating the tip.");
-        }
+       
+        await _tipService.CreateTipAsync(fixtureId, userId, leagueId, seasonId, homeScoreTip, awayScoreTip);
+        return Ok("Tip created successfully.");
+        
     }
     
     [HttpGet("get")]
@@ -56,20 +46,12 @@ public class TipController : ControllerBase
             return Unauthorized("User ID not found in claims.");
         }
 
-        try
+        var tip = await _tipService.GetTipsForUserAsync(userId);
+        if (tip == null)
         {
-            var tip = await _tipService.GetTipsForUserAsync(userId);
-            if (tip == null)
-            {
-                return NotFound("Tip not found for the specified fixture and user.");
-            }
-            return Ok(tip);
+            return NotFound("Tip not found for the specified fixture and user.");
         }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error retrieving tip");
-            return StatusCode(500, "An error occurred while retrieving the tip.");
-        }
+        return Ok(tip);
     }
 
     [HttpDelete("delete")]

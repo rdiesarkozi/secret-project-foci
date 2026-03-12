@@ -83,7 +83,7 @@ public class FixtureDataService : IFixtureDataService
         return filteredFixtures;
     }
 
-    public async Task<FixtureDataDto> GetFixturesResultByMatchIdAsync(long matchId)
+    public async Task<FixtureDataDto> GetFixturesResultByMatchIdAsync(long matchId, int leagueId = 39, int season = 2022)
     {
         var cacheKey = $"fixture_result_{matchId}";
         var cachedBytes = await _cache.GetAsync(cacheKey);
@@ -92,7 +92,7 @@ public class FixtureDataService : IFixtureDataService
             return JsonSerializer.Deserialize<FixtureDataDto>(cachedBytes)!;
         }
         
-        var rawFixtureData = _sportsApiClient.GetAllFixturesByLeagueAsync(39, 2022, CancellationToken.None).Result;
+        var rawFixtureData = await _sportsApiClient.GetAllFixturesByLeagueAsync(leagueId, season, CancellationToken.None);
         var fixtureDataDtos = _rawFixturesToDtoMapper.MapRawFixtureToDto(rawFixtureData);
         var fixtureDataDto = fixtureDataDtos.FirstOrDefault(x => x.FixtureId == matchId);
         

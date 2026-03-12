@@ -12,6 +12,8 @@ public class Tip
     
     public int LeagueId { get; set; }
     
+    public int SeasonId { get; set; }
+    
     public int PredictedHomeScore { get; set; }
     
     public int PredictedAwayScore { get; set; }

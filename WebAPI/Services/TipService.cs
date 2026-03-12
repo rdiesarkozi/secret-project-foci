@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using WebAPI.Data.Enums;
 using WebAPI.Interfaces;
 using WebAPI.Models;
 
@@ -8,20 +9,35 @@ public class TipService : ITipService
 {
     private readonly AppDbContext _dbContext;
     private readonly IFixtureDataService _footballApiService;
+    private readonly ILogger<TipService> _logger;
     
-    public TipService(AppDbContext dbContext, IFixtureDataService footballApiService)
+    public TipService(AppDbContext dbContext, IFixtureDataService footballApiService, ILogger<TipService> logger)
     {
         _dbContext = dbContext;
         _footballApiService = footballApiService;
+        _logger = logger;
     }
     
-    public async Task CreateTipAsync(int fixtureId, string userId, int homeScoreTip, int awayScoreTip)
+    public async Task CreateTipAsync(int fixtureId, string userId, int leagueId, int season, int homeScoreTip, int awayScoreTip)
     {
-        var existingTip = _dbContext.Tips.FirstOrDefault(t => t.MatchId == fixtureId && t.UserId == userId);
-        
+        var matchResult = await _footballApiService.GetFixturesResultByMatchIdAsync(fixtureId, leagueId, season);
+
+        var kickoffUtc = DateTime.SpecifyKind(matchResult.FixtureDate, DateTimeKind.Utc);
+
+        var lockTimeUtc = kickoffUtc.AddMinutes(-1);
+
+        if (DateTime.UtcNow >= lockTimeUtc)
+        {
+            throw new InvalidOperationException("The tipping already closed, because the match begin");
+        }
+
+        var existingTip = await _dbContext
+            .Tips
+            .FirstOrDefaultAsync(t => t.MatchId == fixtureId && t.UserId == userId);
+
         if (existingTip != null)
         {
-            throw new InvalidOperationException("A tip for this fixture by this user already exists.");
+            throw new InvalidOperationException("You have already created a tip.");
         }
 
         var tip = new Tip
@@ -29,21 +45,22 @@ public class TipService : ITipService
             Id = Guid.NewGuid(),
             MatchId = fixtureId,
             UserId = userId,
-            LeagueId = 39, // Placeholder, should be set based on the fixture's league
+            LeagueId = leagueId,
+            SeasonId = season,
             PredictedHomeScore = homeScoreTip,
             PredictedAwayScore = awayScoreTip,
-            ResultStatus = "Pending",
+            ResultStatus = ResultStatus.NotStarted.ToString(),
             SubmittedAtUtc = DateTime.UtcNow,
+            LockedAtUtc = lockTimeUtc,
             AwardedPoints = null,
-            LockedAtUtc = null,
-            ActualAwayScore = null,
-            ActualHomeScore = null
+            ActualHomeScore = null,
+            ActualAwayScore = null
         };
-        
+
         _dbContext.Tips.Add(tip);
         await _dbContext.SaveChangesAsync();
     }
-
+    
     public async Task UpdateTipAsync(int fixtureId, string userId, string homeScoreTip, string awayScoreTip)
     {
         var tip = await _dbContext.Tips
@@ -53,15 +70,11 @@ public class TipService : ITipService
         {
             throw new InvalidOperationException("Tip not found.");
         }
-
-        // Only allow update if the tip hasn't been processed
-        if (tip.ResultStatus != "Pending")
-        {
-            throw new InvalidOperationException("Cannot update a tip that has already been processed.");
-        }
+        
+        _logger.LogInformation("LockedAtUtc: {LockedAtUtc}, DateTime.UtcNow: {DateTimeNow}", tip.LockedAtUtc, DateTime.UtcNow); ;
 
         // Prevent updates to explicitly locked tips
-        if (tip.LockedAtUtc != null)
+        if (tip.LockedAtUtc < DateTime.UtcNow)
         {
             throw new InvalidOperationException("Cannot update a locked tip.");
         }
@@ -95,7 +108,7 @@ public class TipService : ITipService
         }
 
         // Only allow deletion if the tip hasn't been processed
-        if (tip.ResultStatus != "Pending")
+        if (tip.ResultStatus != ResultStatus.NotStarted.ToString())
         {
             throw new InvalidOperationException("Cannot delete a tip that has already been processed.");
         }
@@ -104,9 +117,14 @@ public class TipService : ITipService
         await _dbContext.SaveChangesAsync();
     }
 
-    public Task<Tip> GetTipByIdAsync(int fixtureId, string userId)
+    public async Task<Tip> GetTipByIdAsync(int fixtureId, string userId)
     {
-        throw new NotImplementedException();
+        var tip = await _dbContext.Tips.FirstOrDefaultAsync(t => t.MatchId == fixtureId && t.UserId == userId);
+        if (tip == null)
+        {
+            throw new InvalidOperationException("Tip not found.");
+        }
+        return tip;
     }
 
     public async Task<List<Tip>> GetTipsForUserAsync(string userId)
@@ -120,7 +138,7 @@ public class TipService : ITipService
     public async Task CalculatePointsForCompletedMatchesAsync()
     {
         var pendingTips = await _dbContext.Tips
-            .Where(t => t.ResultStatus == "Pending")
+            .Where(t => t.ResultStatus == ResultStatus.NotStarted.ToString())
             .ToListAsync();
 
         // Collect user points to update
@@ -128,15 +146,15 @@ public class TipService : ITipService
 
         foreach (var tip in pendingTips)
         {
-            var matchResult = await _footballApiService.GetFixturesResultByMatchIdAsync(tip.MatchId);
+            var matchResult = await _footballApiService.GetFixturesResultByMatchIdAsync(tip.MatchId, tip.LeagueId, tip.SeasonId);
 
             if (matchResult.Status != "FT") continue;
 
             tip.ActualHomeScore = matchResult.HomeScore;
             tip.ActualAwayScore = matchResult.AwayScore;
             tip.AwardedPoints = CalculatePoints(tip);
-            tip.ResultStatus = DetermineResultStatus(tip);
             tip.SubmittedAtUtc = DateTime.UtcNow;
+            tip.ResultStatus = ResultStatus.Closed.ToString();
 
             // Accumulate points per user
             if (tip.AwardedPoints > 0)
