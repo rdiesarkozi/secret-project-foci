@@ -18,6 +18,10 @@ public class Tip
     
     public int PredictedAwayScore { get; set; }
     
+    public string HomeTeamName { get; set; } = string.Empty;
+    
+    public string AwayTeamName { get; set; } = string.Empty;
+    
     public int? ActualHomeScore { get; set; }
     
     public int? ActualAwayScore { get; set; }

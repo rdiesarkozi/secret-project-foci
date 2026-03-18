@@ -47,6 +47,8 @@ public class TipService : ITipService
             UserId = userId,
             LeagueId = leagueId,
             SeasonId = season,
+            HomeTeamName = matchResult.HomeTeam,
+            AwayTeamName = matchResult.AwayTeam,
             PredictedHomeScore = homeScoreTip,
             PredictedAwayScore = awayScoreTip,
             ResultStatus = ResultStatus.NotStarted.ToString(),
