@@ -11,6 +11,7 @@ using WebAPI.Models;
 using WebAPI.Services;
 
 var builder = WebApplication.CreateBuilder(args);
+var localFrontendCorsPolicy = "LocalFrontend";
 
 // Add services to the container.
 
@@ -18,6 +19,17 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(localFrontendCorsPolicy, policy =>
+    {
+        policy
+            .WithOrigins("http://localhost:5173", "https://localhost:5173")
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
+});
 
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<ISportsApiClient, SportsApiClient>();
@@ -109,6 +121,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseCors(localFrontendCorsPolicy);
 app.UseAuthentication(); 
 app.UseAuthorization();
 

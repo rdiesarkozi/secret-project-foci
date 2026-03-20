@@ -22,11 +22,23 @@ public class TipService : ITipService
     {
         var matchResult = await _footballApiService.GetFixturesResultByMatchIdAsync(fixtureId, leagueId, season);
 
-        var kickoffUtc = DateTime.SpecifyKind(matchResult.FixtureDate, DateTimeKind.Utc);
+        var kickoffUtc = matchResult.FixtureDate.Kind == DateTimeKind.Utc
+            ? matchResult.FixtureDate
+            : matchResult.FixtureDate.ToUniversalTime();
 
-        var lockTimeUtc = kickoffUtc.AddMinutes(-1);
+        var lockTimeUtc = DateTime.SpecifyKind(kickoffUtc.AddMinutes(-1), DateTimeKind.Utc);
+        var dateTimeUtcNow = DateTime.UtcNow;
 
-        if (DateTime.UtcNow >= lockTimeUtc)
+        _logger.LogInformation(
+            "CreateTip timing check for fixture {FixtureId}, user {UserId}. LockedAtUtc: {LockedAtUtc:o}, DateTimeUtcNow: {DateTimeUtcNow:o}, FixtureDateKind: {FixtureDateKind}, KickoffUtc: {KickoffUtc:o}",
+            fixtureId,
+            userId,
+            lockTimeUtc,
+            dateTimeUtcNow,
+            matchResult.FixtureDate.Kind,
+            kickoffUtc);
+
+        if (dateTimeUtcNow >= lockTimeUtc)
         {
             throw new InvalidOperationException("The tipping already closed, because the match begin");
         }
@@ -40,6 +52,8 @@ public class TipService : ITipService
             throw new InvalidOperationException("You have already created a tip.");
         }
 
+        var submittedAtUtc = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Utc);
+
         var tip = new Tip
         {
             Id = Guid.NewGuid(),
@@ -52,7 +66,7 @@ public class TipService : ITipService
             PredictedHomeScore = homeScoreTip,
             PredictedAwayScore = awayScoreTip,
             ResultStatus = ResultStatus.NotStarted.ToString(),
-            SubmittedAtUtc = DateTime.UtcNow,
+            SubmittedAtUtc = submittedAtUtc,
             LockedAtUtc = lockTimeUtc,
             AwardedPoints = null,
             ActualHomeScore = null,
@@ -60,7 +74,23 @@ public class TipService : ITipService
         };
 
         _dbContext.Tips.Add(tip);
-        await _dbContext.SaveChangesAsync();
+
+        try
+        {
+            await _dbContext.SaveChangesAsync();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(
+                ex,
+                "Failed to create tip for fixture {FixtureId}, user {UserId}. LockedAtUtc: {LockedAtUtc:o}, DateTimeUtcNow: {DateTimeUtcNow:o}, SubmittedAtUtc: {SubmittedAtUtc:o}",
+                fixtureId,
+                userId,
+                lockTimeUtc,
+                dateTimeUtcNow,
+                submittedAtUtc);
+            throw;
+        }
     }
     
     public async Task UpdateTipAsync(int fixtureId, string userId, string homeScoreTip, string awayScoreTip)

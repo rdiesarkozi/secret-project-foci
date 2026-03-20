@@ -1,0 +1,344 @@
+.my-tips-page {
+    position: relative;
+    min-height: 100vh;
+    overflow: hidden;
+    background:
+            radial-gradient(circle at top left, rgba(34, 197, 94, 0.14), transparent 30%),
+            radial-gradient(circle at bottom right, rgba(2, 22, 158, 0.12), transparent 35%),
+            linear-gradient(135deg, #e10d0d 0%, #111827 45%, #1e293b 100%);
+    color: #f8fafc;
+    font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+.my-tips-page__bg-circle {
+    position: absolute;
+    border-radius: 9999px;
+    filter: blur(10px);
+    pointer-events: none;
+    opacity: 0.5;
+}
+
+.my-tips-page__bg-circle--top {
+    top: -120px;
+    right: -120px;
+    width: 320px;
+    height: 320px;
+    background: radial-gradient(circle, rgba(59, 130, 246, 0.35), transparent 70%);
+}
+
+.my-tips-page__bg-circle--bottom {
+    bottom: -140px;
+    left: -140px;
+    width: 360px;
+    height: 360px;
+    background: radial-gradient(circle, rgba(34, 197, 94, 0.28), transparent 70%);
+}
+
+.my-tips-page__header,
+.my-tips-page__content {
+    position: relative;
+    z-index: 1;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding-left: 32px;
+    padding-right: 32px;
+}
+
+.my-tips-page__header {
+    padding-top: 24px;
+    padding-bottom: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+}
+
+.my-tips-page__brand {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.my-tips-page__brand-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    display: grid;
+    place-items: center;
+    font-size: 24px;
+    background: linear-gradient(135deg, #22c55e, #3b82f6);
+}
+
+.my-tips-page__brand-label {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: rgba(248, 250, 252, 0.7);
+}
+
+.my-tips-page__brand-name {
+    font-size: 22px;
+    font-weight: 800;
+    color: #ffffff;
+}
+
+.my-tips-page__nav {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.my-tips-page__nav-link {
+    text-decoration: none;
+    color: rgba(248, 250, 252, 0.82);
+    padding: 10px 14px;
+    border-radius: 10px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.my-tips-page__nav-link:hover,
+.my-tips-page__nav-link--active {
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.my-tips-page__content {
+    padding-top: 40px;
+    padding-bottom: 80px;
+}
+
+.my-tips-page__hero {
+    display: grid;
+    grid-template-columns: 1.4fr 0.8fr;
+    gap: 24px;
+    margin-bottom: 28px;
+}
+
+.my-tips-page__hero-copy,
+.my-tips-page__summary-card,
+.my-tips-page__card,
+.my-tips-page__state,
+.my-tips-page__error {
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(15, 23, 42, 0.72);
+    backdrop-filter: blur(18px);
+    border-radius: 28px;
+    box-shadow: 0 18px 60px rgba(0, 0, 0, 0.28);
+}
+
+.my-tips-page__hero-copy,
+.my-tips-page__summary-card,
+.my-tips-page__state,
+.my-tips-page__error {
+    padding: 32px;
+}
+
+.my-tips-page__eyebrow {
+    display: inline-block;
+    margin-bottom: 18px;
+    color: #22c55e;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+.my-tips-page__title {
+    margin: 0 0 18px;
+    font-size: 46px;
+    line-height: 1.08;
+    font-weight: 800;
+    color: #ffffff;
+}
+
+.my-tips-page__description {
+    margin: 0;
+    font-size: 17px;
+    line-height: 1.7;
+    color: rgba(226, 232, 240, 0.9);
+}
+
+.my-tips-page__summary-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 20px;
+}
+
+.my-tips-page__summary-badge {
+    display: inline-block;
+    align-self: flex-start;
+    padding: 8px 12px;
+    border-radius: 9999px;
+    background: rgba(34, 197, 94, 0.14);
+    color: #86efac;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.my-tips-page__summary-value {
+    display: block;
+    font-size: 34px;
+    font-weight: 800;
+    color: #ffffff;
+    text-align: center;
+}
+
+.my-tips-page__summary-label {
+    display: block;
+    color: rgba(226, 232, 240, 0.72);
+    text-align: center;
+    font-size: 14px;
+}
+
+.my-tips-page__list {
+    display: grid;
+    gap: 20px;
+}
+
+.my-tips-page__card {
+    padding: 24px 28px;
+}
+
+.my-tips-page__card-top,
+.my-tips-page__meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.my-tips-page__card-top {
+    margin-bottom: 18px;
+}
+
+.my-tips-page__meta {
+    margin-top: 20px;
+    color: rgba(226, 232, 240, 0.8);
+    font-size: 14px;
+    flex-wrap: wrap;
+}
+
+.my-tips-page__date {
+    font-size: 14px;
+    color: rgba(226, 232, 240, 0.78);
+}
+
+.my-tips-page__status {
+    padding: 8px 12px;
+    border-radius: 9999px;
+    font-size: 12px;
+    font-weight: 700;
+    background: rgba(59, 130, 246, 0.14);
+    color: #93c5fd;
+    text-transform: uppercase;
+}
+
+.my-tips-page__status--closed {
+    background: rgba(34, 197, 94, 0.16);
+    color: #86efac;
+}
+
+.my-tips-page__status--pending {
+    background: rgba(245, 158, 11, 0.16);
+    color: #fcd34d;
+}
+
+.my-tips-page__teams {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 18px;
+}
+
+.my-tips-page__team {
+    font-size: 22px;
+    font-weight: 700;
+    color: #ffffff;
+}
+
+.my-tips-page__team--home {
+    text-align: right;
+}
+
+.my-tips-page__team--away {
+    text-align: left;
+}
+
+.my-tips-page__prediction {
+    font-size: 24px;
+    font-weight: 800;
+    color: #ffffff;
+    padding: 10px 16px;
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.06);
+}
+
+.my-tips-page__state {
+    text-align: center;
+}
+
+.my-tips-page__error {
+    color: #fecaca;
+}
+
+.my-tips-page__list-wrapper {
+    max-height: 70vh;
+    overflow-y: auto;
+    padding-right: 8px;
+}
+
+.my-tips-page__list-wrapper::-webkit-scrollbar {
+    width: 8px;
+}
+
+.my-tips-page__list-wrapper::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 9999px;
+}
+
+.my-tips-page__list-wrapper::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+@media (max-width: 960px) {
+    .my-tips-page__hero {
+        grid-template-columns: 1fr;
+    }
+
+    .my-tips-page__title {
+        font-size: 36px;
+    }
+}
+
+@media (max-width: 640px) {
+    .my-tips-page__header,
+    .my-tips-page__content {
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+
+    .my-tips-page__header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .my-tips-page__teams {
+        grid-template-columns: 1fr;
+        text-align: center;
+    }
+
+    .my-tips-page__team--home,
+    .my-tips-page__team--away {
+        text-align: center;
+    }
+
+    .my-tips-page__card-top,
+    .my-tips-page__meta {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}

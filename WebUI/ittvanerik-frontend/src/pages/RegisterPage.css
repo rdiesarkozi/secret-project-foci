@@ -1,0 +1,321 @@
+.register-page {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    background: linear-gradient(135deg, #0b1d3a 0%, #153a6b 50%, #8b1e2d 100%);
+    font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    position: relative;
+    overflow: hidden;
+}
+
+.register-page__bg-circle {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.06);
+}
+
+.register-page__bg-circle--top {
+    width: 280px;
+    height: 280px;
+    top: -80px;
+    left: -60px;
+}
+
+.register-page__bg-circle--bottom {
+    width: 340px;
+    height: 340px;
+    bottom: -120px;
+    right: -100px;
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.register-page__card {
+    width: 100%;
+    max-width: 1080px;
+    min-height: 640px;
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    background: #ffffff;
+    border-radius: 28px;
+    overflow: hidden;
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.25);
+    position: relative;
+    z-index: 1;
+}
+
+.register-page__hero {
+    background: linear-gradient(180deg, #102746 0%, #173b6d 100%);
+    color: #ffffff;
+    padding: 56px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+}
+
+.register-page__brand {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 48px;
+}
+
+.register-page__brand-icon {
+    width: 54px;
+    height: 54px;
+    border-radius: 16px;
+    background: #8b1e2d;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    box-shadow: 0 10px 25px rgba(139, 30, 45, 0.35);
+}
+
+.register-page__brand-label {
+    font-size: 12px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.72);
+}
+
+.register-page__brand-name {
+    font-size: 24px;
+    font-weight: 800;
+}
+
+.register-page__hero-copy {
+    max-width: 480px;
+}
+
+.register-page__eyebrow {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.22em;
+    color: #f2a7b2;
+    margin-bottom: 18px;
+}
+
+.register-page__title {
+    margin: 0;
+    font-size: 48px;
+    line-height: 1.05;
+    font-weight: 900;
+}
+
+.register-page__description {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    font-size: 17px;
+    line-height: 1.7;
+    color: rgba(255, 255, 255, 0.78);
+}
+
+.register-page__features {
+    display: grid;
+    gap: 16px;
+    max-width: 420px;
+}
+
+.register-page__feature {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    padding: 18px 20px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 18px;
+    backdrop-filter: blur(8px);
+}
+
+.register-page__feature-icon {
+    font-size: 20px;
+}
+
+.register-page__feature-title {
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+
+.register-page__feature-text {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.74);
+}
+
+.register-page__hero-ball {
+    position: absolute;
+    right: 28px;
+    bottom: 20px;
+    font-size: 120px;
+    opacity: 0.05;
+    pointer-events: none;
+}
+
+.register-page__form-panel {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 56px 40px;
+    background: #ffffff;
+}
+
+.register-page__form-wrap {
+    width: 100%;
+    max-width: 400px;
+}
+
+.register-page__form-header {
+    margin-bottom: 32px;
+}
+
+.register-page__form-eyebrow {
+    color: #8b1e2d;
+    font-size: 12px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    margin-bottom: 10px;
+}
+
+.register-page__form-title {
+    margin: 0;
+    font-size: 34px;
+    color: #18212f;
+    font-weight: 800;
+}
+
+.register-page__form-description {
+    margin-top: 10px;
+    color: #667085;
+    font-size: 15px;
+    line-height: 1.6;
+}
+
+.register-page__fields {
+    display: grid;
+    gap: 18px;
+}
+
+.register-page__label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #344054;
+}
+
+.register-page__input {
+    width: 100%;
+    height: 54px;
+    padding: 0 16px;
+    border-radius: 16px;
+    border: 1px solid #d0d5dd;
+    outline: none;
+    font-size: 15px;
+    box-sizing: border-box;
+    background: #ffffff;
+}
+
+.register-page__input:focus {
+    border-color: #8b1e2d;
+    box-shadow: 0 0 0 4px rgba(139, 30, 45, 0.12);
+}
+
+.register-page__error {
+    padding: 12px 14px;
+    border-radius: 14px;
+    background: #fef3f2;
+    border: 1px solid #fecaca;
+    color: #b42318;
+    font-size: 14px;
+}
+
+.register-page__button {
+    height: 56px;
+    border: none;
+    border-radius: 16px;
+    background: linear-gradient(90deg, #b60d25 0%, #a3263a 100%);
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 14px 30px rgba(139, 30, 45, 0.28);
+    transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.register-page__button:hover:not(:disabled) {
+    transform: translateY(-1px);
+}
+
+.register-page__button:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.register-page__login {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.register-page__login-text {
+    font-size: 14px;
+    color: rgb(11, 56, 108);
+}
+
+.register-page__login-link {
+    font-size: 14px;
+    font-weight: 700;
+    color: #7f1313;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.register-page__login-link:hover {
+    color: #420000;
+    text-decoration: underline;
+}
+
+.register-page__footer {
+    margin-top: 22px;
+    text-align: center;
+    font-size: 14px;
+    color: #667085;
+}
+
+@media (max-width: 900px) {
+    .register-page__card {
+        grid-template-columns: 1fr;
+    }
+
+    .register-page__hero {
+        padding: 40px;
+    }
+
+    .register-page__form-panel {
+        padding: 40px 24px;
+    }
+}
+
+@media (max-width: 640px) {
+    .register-page {
+        padding: 16px;
+    }
+
+    .register-page__hero {
+        padding: 32px 24px;
+    }
+
+    .register-page__title {
+        font-size: 36px;
+    }
+
+    .register-page__form-title {
+        font-size: 28px;
+    }
+}

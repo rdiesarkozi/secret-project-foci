@@ -30,10 +30,37 @@ public class TipController : ControllerBase
             return Unauthorized("User ID not found in claims.");
         }
 
-       
-        await _tipService.CreateTipAsync(fixtureId, userId, leagueId, seasonId, homeScoreTip, awayScoreTip);
-        return Ok("Tip created successfully.");
-        
+        try
+        {
+            await _tipService.CreateTipAsync(fixtureId, userId, leagueId, seasonId, homeScoreTip, awayScoreTip);
+            return Ok("Tip created successfully.");
+        }
+        catch (InvalidOperationException ex)
+        {
+            _logger.LogWarning(
+                ex,
+                "Tip creation rejected for fixture {FixtureId}, league {LeagueId}, season {SeasonId}, user {UserId}.",
+                fixtureId,
+                leagueId,
+                seasonId,
+                userId);
+            return BadRequest(ex.Message);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(
+                ex,
+                "Error creating tip for fixture {FixtureId}, league {LeagueId}, season {SeasonId}, user {UserId}.",
+                fixtureId,
+                leagueId,
+                seasonId,
+                userId);
+            return StatusCode(500, new
+            {
+                message = "An error occurred while creating the tip.",
+                error = ex.Message
+            });
+        }
     }
     
     [HttpGet("get")]
