@@ -24,6 +24,9 @@ public class GroupLeaderboardEntryConfiguration : IEntityTypeConfiguration<Group
         
         builder.Property(x => x.PeriodKey).IsRequired();
         
+        builder.Property(x => x.LeagueId)
+            .IsRequired();
+        
         builder.HasOne(x => x.Group)
             .WithMany(g => g.LeaderboardEntries)
             .HasForeignKey(x => x.GroupId)

@@ -20,6 +20,12 @@ public class GroupConfiguration : IEntityTypeConfiguration<Group>
             .IsRequired()
             .HasMaxLength(20);
         
+        builder.Property(g => g.LeagueId)
+            .IsRequired();
+        
+        builder.Property(g => g.SeasonId)
+            .IsRequired();
+        
         builder.Property(x => x.JoinCode)
             .HasMaxLength(20);
         

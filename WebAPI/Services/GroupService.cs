@@ -13,7 +13,12 @@ public class GroupService : IGroupService
     {
         _context = context;
     }
-    public async Task<Group> CreateGroup(string groupName, string creatorId)
+    public async Task<Group> CreateGroup(
+        string groupName,
+        string creatorId,
+        int leagueId,
+        int seasonId,
+        GroupVisibility visibility = GroupVisibility.Private)
     {
         var group = new Group
         {
@@ -21,7 +26,9 @@ public class GroupService : IGroupService
             Name = groupName,
             JoinCode = GenerateJoinCode(),
             CreatedAtUtc = DateTime.UtcNow,
-            Visibility = nameof(GroupVisibility.Private),
+            Visibility = visibility.ToString(),
+            LeagueId = leagueId,
+            SeasonId = seasonId,
             OwnerId = creatorId
         };
 
@@ -40,6 +47,8 @@ public class GroupService : IGroupService
             UserId = creatorId,
             Period = "AllTime",
             PeriodKey = DateTime.UtcNow.Year.ToString(),
+            LeagueId = group.LeagueId,
+            SeasonId = group.SeasonId,
             Points = 0,
             Rank = 1,
             UpdatedAtUtc = DateTime.UtcNow
@@ -104,6 +113,8 @@ public class GroupService : IGroupService
             UserId = userId,
             Period = "AllTime",
             PeriodKey = DateTime.UtcNow.Year.ToString(),
+            LeagueId = group.LeagueId,
+            SeasonId = group.SeasonId,
             Points = 0,
             Rank = 0,
             UpdatedAtUtc = DateTime.UtcNow
@@ -115,7 +126,17 @@ public class GroupService : IGroupService
 
         return member;
     }
-    
+
+    public Task<bool> LeaveGroupAsync(Guid groupId, string userId)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<bool> DeleteGroupAsync(Guid groupId, string userId)
+    {
+        throw new NotImplementedException();
+    }
+
     private string GenerateJoinCode()
     {
         const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";

@@ -66,7 +66,7 @@ public class FixtureDataService : IFixtureDataService
             return JsonSerializer.Deserialize<List<FixtureDataDto>>(cachedBytes)!;
         }
         
-        var rawFixtureData = _sportsApiClient.GetAllFixturesByLeagueAsync(league, season, CancellationToken.None).Result;
+        var rawFixtureData = await _sportsApiClient.GetAllFixturesByLeagueAsync(league, season, CancellationToken.None);
         var fixtureDataDtos = _rawFixturesToDtoMapper.MapRawFixtureToDto(rawFixtureData);
         var filteredFixtures = fixtureDataDtos.Where(x => x.FixtureDate.Date == date.Date).ToList();
         
@@ -110,5 +110,31 @@ public class FixtureDataService : IFixtureDataService
         }
         
         return fixtureDataDto;
+    }
+
+    public async Task<List<FixtureDataDto>> GetAllUpcomingFixturesByLeagueAsync(int league, int season, int numberOfNextMatches)
+    {
+        var cacheKey = $"upcoming_fixtures_{league}_{season}_{numberOfNextMatches}";
+        
+        var cachedBytes = await _cache.GetAsync(cacheKey);
+        if (cachedBytes is not null)
+        {
+            return JsonSerializer.Deserialize<List<FixtureDataDto>>(cachedBytes)!;
+        }
+        
+        var rawFixtureData = await _sportsApiClient.GetTheUpcomingFixturesByLeagueAsync(league, season, numberOfNextMatches, CancellationToken.None);
+        var fixtureDataDtos = _rawFixturesToDtoMapper.MapRawFixtureToDto(rawFixtureData);
+        
+        var cacheOptions = new DistributedCacheEntryOptions
+        {
+            AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(1)
+        };
+        
+        await _cache.SetAsync(
+            cacheKey,
+            JsonSerializer.SerializeToUtf8Bytes(fixtureDataDtos),
+            cacheOptions);
+        
+        return fixtureDataDtos;
     }
 }

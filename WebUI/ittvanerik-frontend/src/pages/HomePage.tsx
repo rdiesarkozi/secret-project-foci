@@ -17,6 +17,7 @@ export default function HomePage() {
             <div className="home-page__bg-circle home-page__bg-circle--bottom" />
 
             <header className="home-page__header">
+                <Link to="/">
                 <div className="home-page__brand">
                     <div className="home-page__brand-icon">⚽</div>
                     <div className="home-page__brand-text">
@@ -24,12 +25,15 @@ export default function HomePage() {
                         <div className="home-page__brand-name">TipZone</div>
                     </div>
                 </div>
+                </Link>
 
                 <nav className="home-page__nav">
                     <Link to="/matches" className="home-page__nav-link">Matches</Link>
-                    <Link to="/leaderboard" className="home-page__nav-link">Leaderboard</Link>
                     <Link to="/my-tips" className="home-page__nav-link">My Tips</Link>
                     <Link to="/profile" className="home-page__nav-link">Profile</Link>
+                    <Link to="/groups" className="group-page__nav-link">
+                        My Groups
+                    </Link>
                     {isAuthenticated ? (
                         <button type="button" onClick={handleLogout} className="home-page__nav-button">
                             Log out

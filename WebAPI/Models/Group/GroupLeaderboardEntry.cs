@@ -18,6 +18,8 @@ public class GroupLeaderboardEntry
     
     public int? LeagueId { get; set; }
     
+    public int? SeasonId { get; set; }
+    
     public int Points { get; set; }
     
     public int Rank { get; set; }

@@ -52,4 +52,16 @@ public class FixtureController : ControllerBase
 
         return Ok(fixtureData);
     }
+    
+    [HttpGet("upcoming")]
+    public async Task<IActionResult> GetUpcomingFixtures([FromQuery] int league,[FromQuery] int season ,[FromQuery] int numberOfNextMatches)
+    {
+        if (league <= 0 || season <= 0 || numberOfNextMatches <= 0)
+        {
+            return BadRequest("`league`, `season`, and `numberOfNextMatches` must be provided and greater than 0.");
+        }
+        
+        var fixtureData = await _fixtureDataService.GetAllUpcomingFixturesByLeagueAsync(league, season, numberOfNextMatches);
+        return Ok(fixtureData);
+    }
 }

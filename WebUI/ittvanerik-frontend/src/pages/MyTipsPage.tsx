@@ -64,6 +64,9 @@ export default function MyTipsPage() {
                         My Tips
                     </Link>
                     <Link to="/profile" className="my-tips-page__nav-link">Profile</Link>
+                    <Link to="/groups" className="group-page__nav-link">
+                        My Groups
+                    </Link>
                 </nav>
             </header>
 

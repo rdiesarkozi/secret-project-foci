@@ -1,5 +1,6 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
+using WebAPI.Data.Enums;
 using WebAPI.Dto;
 using WebAPI.Interfaces;
 
@@ -17,7 +18,7 @@ public class GroupController : ControllerBase
     }
     
     [HttpPost("create")]
-    public async Task<IActionResult> CreateNewGroupAsync(string groupName)
+    public async Task<IActionResult> CreateNewGroupAsync([FromBody] CreateGroupRequestDto createGroupRequestDto)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
         
@@ -26,13 +27,24 @@ public class GroupController : ControllerBase
             return Unauthorized("User ID not found in claims.");
         }
         
-        var group = await _groupService.CreateGroup(groupName, userId);
+        if(createGroupRequestDto.LeagueId <= 0 || createGroupRequestDto.seasonId <= 0)
+        {
+            return BadRequest("Invalid league or season ID.");
+        }
+        
+        var group = await _groupService.CreateGroup(createGroupRequestDto.GroupName,
+            userId,
+            createGroupRequestDto.LeagueId,
+            createGroupRequestDto.seasonId,
+            createGroupRequestDto.Visibility);
         
         return Ok(new GroupDto
         {
             Id = group.Id,
             Name = group.Name,
             JoinCode = group.JoinCode,
+            SeasonId = group.SeasonId,
+            LeagueId = group.LeagueId,
             Visibility = group.Visibility,
             CreatedAtUtc = group.CreatedAtUtc
         });
@@ -77,6 +89,8 @@ public class GroupController : ControllerBase
             Id = group.Id,
             Name = group.Name,
             JoinCode = group.JoinCode,
+            SeasonId = group.SeasonId,
+            LeagueId = group.LeagueId,
             Visibility = group.Visibility,
             CreatedAtUtc = group.CreatedAtUtc
         });
@@ -99,6 +113,8 @@ public class GroupController : ControllerBase
             Id = g.Id,
             Name = g.Name,
             JoinCode = g.JoinCode,
+            SeasonId = g.SeasonId,
+            LeagueId = g.LeagueId,
             Visibility = g.Visibility,
             CreatedAtUtc = g.CreatedAtUtc
         }).ToList();
@@ -121,6 +137,8 @@ public class GroupController : ControllerBase
             Id = group.Id,
             Name = group.Name,
             JoinCode = group.JoinCode,
+            SeasonId = group.SeasonId,
+            LeagueId = group.LeagueId,
             Visibility = group.Visibility,
             CreatedAtUtc = group.CreatedAtUtc
         });

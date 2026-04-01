@@ -12,6 +12,10 @@ public class Group
     
     public string Visibility { get; set; }
     
+    public int LeagueId { get; set; }
+    
+    public int SeasonId { get; set; }
+    
     public string OwnerId { get; set; }
     
     public DateTime CreatedAtUtc { get; set; }

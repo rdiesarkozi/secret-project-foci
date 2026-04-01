@@ -46,6 +46,116 @@
     gap: 24px;
 }
 
+.home-page {
+    position: relative;
+    min-height: 100vh;
+    overflow: hidden;
+    background:
+            radial-gradient(circle at top left, rgba(34, 197, 94, 0.14), transparent 30%),
+            radial-gradient(circle at bottom right, rgba(2, 22, 158, 0.12), transparent 35%),
+            linear-gradient(135deg, #e10d0d 0%, #111827 45%, #1e293b 100%);
+    font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+.home-page--dark {
+    --hp-text: #f8fafc;
+    --hp-title: #ffffff;
+    --hp-muted: rgba(226, 232, 240, 0.88);
+    --hp-muted-soft: rgba(226, 232, 240, 0.72);
+    --hp-nav: rgba(248, 250, 252, 0.82);
+    --hp-nav-hover-bg: rgba(255, 255, 255, 0.08);
+    --hp-surface: rgba(15, 23, 42, 0.72);
+    --hp-surface-2: rgba(255, 255, 255, 0.05);
+    --hp-border: rgba(255, 255, 255, 0.08);
+    --hp-secondary-bg: rgba(255, 255, 255, 0.04);
+    --hp-secondary-border: rgba(255, 255, 255, 0.12);
+}
+
+.home-page--light {
+    --hp-text: #0f172a;
+    --hp-title: #111827;
+    --hp-muted: rgba(15, 23, 42, 0.78);
+    --hp-muted-soft: rgba(15, 23, 42, 0.62);
+    --hp-nav: rgba(15, 23, 42, 0.82);
+    --hp-nav-hover-bg: rgba(255, 255, 255, 0.18);
+    --hp-surface: rgba(255, 255, 255, 0.78);
+    --hp-surface-2: rgba(248, 250, 252, 0.9);
+    --hp-border: rgba(15, 23, 42, 0.1);
+    --hp-secondary-bg: rgba(255, 255, 255, 0.5);
+    --hp-secondary-border: rgba(15, 23, 42, 0.12);
+}
+
+.home-page,
+.home-page__nav-link,
+.home-page__brand-label,
+.home-page__brand-name,
+.home-page__title,
+.home-page__description,
+.home-page__card-title,
+.home-page__card-text,
+.home-page__stat-value,
+.home-page__stat-label,
+.home-page__secondary-button {
+    color: var(--hp-text);
+}
+
+.home-page__header {
+    position: relative;
+    z-index: 1;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 24px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+}
+
+.home-page__hero-copy,
+.home-page__hero-card {
+    border: 1px solid var(--hp-border);
+    background: var(--hp-surface);
+    backdrop-filter: blur(18px);
+    box-shadow: 0 18px 60px rgba(0, 0, 0, 0.28);
+}
+
+.home-page__brand-label,
+.home-page__description,
+.home-page__card-text {
+    color: var(--hp-muted);
+}
+
+.home-page__brand-name,
+.home-page__title,
+.home-page__card-title,
+.home-page__stat-value {
+    color: var(--hp-title);
+}
+
+.home-page__nav-link {
+    color: var(--hp-nav);
+}
+
+.home-page__nav-link:hover {
+    color: var(--hp-title);
+    background: var(--hp-nav-hover-bg);
+}
+
+.home-page__secondary-button {
+    color: var(--hp-title);
+    border: 1px solid var(--hp-secondary-border);
+    background: var(--hp-secondary-bg);
+}
+
+.home-page__stat {
+    background: var(--hp-surface-2);
+    border: 1px solid var(--hp-border);
+}
+
+.home-page__stat-label {
+    color: var(--hp-muted-soft);
+}
+
 .home-page__brand {
     display: flex;
     align-items: center;

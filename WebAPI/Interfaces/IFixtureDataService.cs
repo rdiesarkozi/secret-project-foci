@@ -11,4 +11,6 @@ public interface IFixtureDataService
     public Task<List<FixtureDataDto>> GetFixtureDataByDateAsync(DateTime date, int league, int season);
     
     public Task<FixtureDataDto> GetFixturesResultByMatchIdAsync(long matchId, int league, int season);
+    
+    public Task<List<FixtureDataDto>> GetAllUpcomingFixturesByLeagueAsync(int league, int season, int numberOfNextMatches);
 }

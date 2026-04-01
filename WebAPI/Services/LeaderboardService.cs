@@ -16,21 +16,30 @@ public class LeaderboardService : ILeaderboardService
     
     public async Task<List<LeaderboardDto>> GetLeaderboardAsync(Guid groupId)
     {
-        var members = await _dbContext.GroupMembers
+        var groupExists = await _dbContext.Groups
+            .AnyAsync(g => g.Id == groupId);
+
+        if (!groupExists)
+        {
+            return new List<LeaderboardDto>();
+        }
+
+        var leaderboard = await _dbContext.GroupMembers
             .Where(gm => gm.GroupId == groupId)
-            .OrderByDescending(gm => gm.Points)
             .Select(gm => new LeaderboardDto
             {
                 Username = gm.User.UserName,
                 Points = gm.Points
             })
+            .OrderByDescending(x => x.Points)
             .ToListAsync();
 
-        for (int i = 0; i < members.Count; i++)
+        for (var i = 0; i < leaderboard.Count; i++)
         {
-            members[i].Rank = i + 1;
+            leaderboard[i].Rank = i + 1;
         }
 
-        return members;
+        return leaderboard;
     }
+
 }

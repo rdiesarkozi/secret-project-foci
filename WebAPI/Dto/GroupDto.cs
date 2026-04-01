@@ -6,5 +6,10 @@ public class GroupDto
     public string Name { get; set; }
     public string JoinCode { get; set; }
     public string Visibility { get; set; }
+    
+    public int SeasonId { get; set; }
+    
+    public int LeagueId { get; set; }
+    
     public DateTime CreatedAtUtc { get; set; }
 }
