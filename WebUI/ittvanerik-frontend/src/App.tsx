@@ -8,6 +8,7 @@ import MatchesPage from "./pages/MatchesPage";
 import ProfilePage from "./pages/ProfilePage";
 import LeaderboardPage from "./pages/LeaderboardPage.tsx";
 import MyTipsPage from "./pages/MyTipsPage";
+import GroupPage from "./pages/GroupPage.tsx";
 
 function ForgotPasswordPage() {
     return <div>Forgot Password Page</div>;
@@ -28,6 +29,7 @@ function App() {
                         <Route path="/leaderboard" element={<LeaderboardPage />} />
                         <Route path="/profile" element={<ProfilePage />} />
                         <Route path="/my-tips" element={<MyTipsPage />} />
+                        <Route path="/groups" element={<GroupPage />} />
                     </Route>
 
                     <Route path="*" element={<h1>Page not found</h1>} />
