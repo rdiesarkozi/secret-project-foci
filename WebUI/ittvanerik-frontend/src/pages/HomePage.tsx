@@ -1,15 +1,8 @@
-import { Link, useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
+import { Link } from "react-router-dom";
 import "./HomePage.css";
+import NavigationMenu from "../components/NavigationMenu.tsx";
 
 export default function HomePage() {
-    const { logout, isAuthenticated } = useAuth();
-    const navigate = useNavigate();
-
-    const handleLogout = () => {
-        logout();
-        navigate("/login", { replace: true });
-    };
 
     return (
         <div className="home-page">
@@ -28,19 +21,7 @@ export default function HomePage() {
                 </Link>
 
                 <nav className="home-page__nav">
-                    <Link to="/matches" className="home-page__nav-link">Matches</Link>
-                    <Link to="/my-tips" className="home-page__nav-link">My Tips</Link>
-                    <Link to="/profile" className="home-page__nav-link">Profile</Link>
-                    <Link to="/groups" className="group-page__nav-link">
-                        My Groups
-                    </Link>
-                    {isAuthenticated ? (
-                        <button type="button" onClick={handleLogout} className="home-page__nav-button">
-                            Log out
-                        </button>
-                    ) : (
-                        <Link to="/login" className="home-page__nav-button">Login</Link>
-                    )}
+                   <NavigationMenu />
                 </nav>
             </header>
 

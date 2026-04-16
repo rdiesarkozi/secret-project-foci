@@ -133,3 +133,31 @@ export async function getGroupById(
 
     return mapApiGroup(data);
 }
+
+export async function joinGroup(token: string, joinCode: string): Promise<GroupResponse> {
+    const response = await fetch(`${API_BASE_URL}/Group/join?joinCode=${encodeURIComponent(joinCode)}`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+        },
+    });
+
+    const contentType = response.headers.get("content-type") ?? "";
+    const data = contentType.includes("application/json")
+        ? await response.json()
+        : await response.text();
+
+    if (!response.ok) {
+        const message =
+            typeof data === "string"
+                ? data
+                : typeof data === "object" && data && "message" in data
+                    ? String(data.message)
+                    : "Failed to join group";
+
+        throw new Error(message);
+    }
+
+    return mapApiGroup(data);
+}

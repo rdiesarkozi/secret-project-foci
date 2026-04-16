@@ -213,7 +213,12 @@ public class TipService : ITipService
 
         await _dbContext.SaveChangesAsync();
     }
-    
+
+    public Task ChooseWinnerAndTopScorerAsync(int leagueId, int seasonId)
+    {
+        throw new NotImplementedException();
+    }
+
     private int CalculatePoints(Tip tip)
     {
         int points = 0;

@@ -12,6 +12,7 @@ import {
 import { createTip, getMyTips, updateTip } from "../api/tipApi";
 import GroupSelect from "../components/GroupSelect";
 import "./MatchesPage.css";
+import NavigationMenu from "../components/NavigationMenu.tsx";
 
 type PredictionState = {
     homeScoreTip: string;
@@ -311,12 +312,7 @@ export default function MatchesPage() {
                 </Link>
 
                 <nav className="matches-page__nav">
-                    <Link to="/" className="matches-page__nav-link">Home</Link>
-                    <Link to="/matches" className="matches-page__nav-link matches-page__nav-link--active">
-                        Matches
-                    </Link>
-                    <Link to="/profile" className="matches-page__nav-link">Profile</Link>
-                    <Link to="/groups" className="matches-page__nav-link">My Groups</Link>
+                    <NavigationMenu />
                 </nav>
             </header>
 
@@ -374,6 +370,7 @@ export default function MatchesPage() {
                         <div className="matches-page__state">No available matches found.</div>
                     </section>
                 ) : (
+                    <section className="my-matches-page__list-wrapper">
                     <section className="matches-page__list">
                         {matches.map((match) => {
                             const formatted = formatDateTime(match.fixtureDate);
@@ -469,6 +466,7 @@ export default function MatchesPage() {
                             );
                         })}
                     </section>
+                </section>
                 )}
             </main>
         </div>

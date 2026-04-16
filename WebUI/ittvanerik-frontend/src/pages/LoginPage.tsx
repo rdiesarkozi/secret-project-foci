@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { login as loginApi } from "../api/authApi";
+import {googleLogin, login as loginApi} from "../api/authApi";
 import { useAuth } from "../context/AuthContext";
 import "./LoginPage.css";
+import ThemeToggle from "../components/ThemeToggle.tsx";
+import {GoogleLogin} from "@react-oauth/google";
 
 export default function LoginPage() {
     const [username, setUsername] = useState("");
@@ -52,6 +54,7 @@ export default function LoginPage() {
                                 </div>
                                 <div className="login-page__brand-name">TipZone</div>
                             </div>
+                            <ThemeToggle />
                         </div>
 
                         <div className="login-page__hero-copy">
@@ -148,6 +151,24 @@ export default function LoginPage() {
                                 >
                                     {loading ? "Signing in..." : "Log In"}
                                 </button>
+                                <div className="login-page__google-divider">
+                                    <div className="login-page__google-divider-text">Or continue with</div>
+                                    <GoogleLogin
+                                        onSuccess={async (credentialResponse) => {
+                                            try {
+                                                setLoading(true);
+                                                const response = await googleLogin(credentialResponse.credential!);
+                                                login(response.token);
+                                                navigate("/matches", { replace: true });
+                                            } catch (err: any) {
+                                                setError(err.message || "Google login failed");
+                                            } finally {
+                                                setLoading(false);
+                                            }
+                                        }}
+                                        onError={() => setError("Google login failed")}
+                                    />
+                                </div>
                                 <div className="login-page__register">
                                     <span className="login-page__register-text">
                                         Don’t have an account?

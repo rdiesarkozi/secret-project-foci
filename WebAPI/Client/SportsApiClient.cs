@@ -76,4 +76,19 @@ public class SportsApiClient : ISportsApiClient
         
         throw new Exception($"API request failed with status code {response.StatusCode}: {response.Content}");
     }
+
+    public Task<RawFixturesResponse> GetTheTopGoalScorersByLeagueAsync(int leagueId, int seasonByYear, CancellationToken cancellationToken)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<RawFixturesResponse> GetTheTopAssistsByLeagueAsync(int leagueId, int seasonByYear, CancellationToken cancellationToken)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<RawFixturesResponse> GetTheWinnersOfTheLeagueAsync(int leagueId, int seasonByYear, CancellationToken cancellationToken)
+    {
+        throw new NotImplementedException();
+    }
 }

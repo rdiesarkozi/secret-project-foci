@@ -1,6 +1,6 @@
 import "./ProfilePage.css";
-import {Link, useNavigate} from "react-router-dom";
-import {useAuth} from "../context/AuthContext.tsx";
+import {Link} from "react-router-dom";
+import NavigationMenu from "../components/NavigationMenu.tsx";
 
 type ProfileStatProps = {
     label: string;
@@ -31,14 +31,6 @@ function ProfileInfoItem({ label, value }: ProfileInfoItemProps) {
 }
 
 export default function ProfilePage() {
-
-    const { logout, isAuthenticated } = useAuth();
-    const navigate = useNavigate();
-
-    const handleLogout = () => {
-        logout();
-        navigate("/login", { replace: true });
-    };
     
     return (
         <div className="profile-page">
@@ -57,27 +49,7 @@ export default function ProfilePage() {
                 </Link>
 
                 <nav className="profile-page__nav">
-                    <Link to="/" className="profile-page__nav-link">Home</Link>
-                    <Link to="/matches" className="profile-page__nav-link">Matches</Link>
-                    <Link to="/my-tips" className="profile-page__nav-link">My Tips</Link>
-                    <Link to="/groups" className="profile-page__nav-link">My Groups</Link>
-                    <Link
-                        to="/profile"
-                        className="profile-page__nav-link profile-page__nav-link--active"
-                    >
-                        Profile
-                    </Link>
-                    {isAuthenticated ? (
-                        <button
-                            type="button"
-                            onClick={handleLogout}
-                            className="profile-page__nav-button"
-                        >
-                            Log out
-                        </button>
-                    ) : (
-                        <Link to="/login" className="profile-page__nav-button">Login</Link>
-                    )}
+                   <NavigationMenu />
                 </nav>
             </header>
 
@@ -101,7 +73,7 @@ export default function ProfilePage() {
                         <div className="profile-page__stats">
                             <ProfileStat label="Predictions" value="48" />
                             <ProfileStat label="Points" value="126" />
-                            <ProfileStat label="Rank" value="\#12" />
+                            <ProfileStat label="Rank" value="12" />
                         </div>
                     </div>
                 </section>

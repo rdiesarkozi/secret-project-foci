@@ -1,8 +1,9 @@
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { createGroup, getMyGroups, type GroupVisibility } from "../api/GroupApi";
+import { createGroup, getMyGroups, joinGroup, type GroupVisibility } from "../api/GroupApi";
 import { useAuth } from "../context/AuthContext";
 import "./GroupPage.css";
+import NavigationMenu from "../components/NavigationMenu.tsx";
 
 type Group = {
     id: string;
@@ -27,6 +28,11 @@ export default function GroupPage() {
     const [createLoading, setCreateLoading] = useState(false);
     const [createError, setCreateError] = useState("");
     const [createSuccess, setCreateSuccess] = useState("");
+
+    const [joinCode, setJoinCode] = useState("");
+    const [joinLoading, setJoinLoading] = useState(false);
+    const [joinError, setJoinError] = useState("");
+    const [joinSuccess, setJoinSuccess] = useState("");
 
     useEffect(() => {
         const loadGroups = async () => {
@@ -78,7 +84,11 @@ export default function GroupPage() {
 
             const newGroup = await createGroup(token, trimmedName, leagueId, seasonId, groupVisibility);
 
-            setGroups((prev) => [newGroup, ...prev]);
+            setGroups((prev) => {
+                const exists = prev.some((group) => group.id === newGroup.id);
+                return exists ? prev : [newGroup, ...prev];
+            });
+
             setGroupName("");
             setGroupVisibility("Public");
             setSeasonId(2026);
@@ -88,6 +98,40 @@ export default function GroupPage() {
             setCreateError(err instanceof Error ? err.message : "Failed to create group.");
         } finally {
             setCreateLoading(false);
+        }
+    };
+
+    const handleJoinGroup = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+
+        try {
+            setJoinLoading(true);
+            setJoinError("");
+            setJoinSuccess("");
+
+            if (!token) {
+                throw new Error("You must be logged in to join a group.");
+            }
+
+            const trimmedJoinCode = joinCode.trim();
+
+            if (!trimmedJoinCode) {
+                throw new Error("Join code is required.");
+            }
+
+            const joinedGroup = await joinGroup(token, trimmedJoinCode);
+
+            setGroups((prev) => {
+                const exists = prev.some((group) => group.id === joinedGroup.id);
+                return exists ? prev : [joinedGroup, ...prev];
+            });
+
+            setJoinCode("");
+            setJoinSuccess(`Joined "${joinedGroup.name}" successfully.`);
+        } catch (err) {
+            setJoinError(err instanceof Error ? err.message : "Failed to join group.");
+        } finally {
+            setJoinLoading(false);
         }
     };
 
@@ -106,12 +150,7 @@ export default function GroupPage() {
                 </div>
 
                 <nav className="group-page__nav">
-                    <Link to="/" className="group-page__nav-link">Home</Link>
-                    <Link to="/matches" className="group-page__nav-link">Matches</Link>
-                    <Link to="/my-tips" className="group-page__nav-link">My Tips</Link>
-                    <Link to="/groups" className="group-page__nav-link group-page__nav-link--active">
-                        My Groups
-                    </Link>
+                    <NavigationMenu />
                 </nav>
             </header>
 
@@ -127,13 +166,51 @@ export default function GroupPage() {
 
                     <div className="group-page__summary-card">
                         <div className="group-page__summary-badge">Groups Overview</div>
-                        <div>
+                        <div className="group-page__summary-stat">
                             <div className="group-page__summary-value">{groups.length}</div>
                             <div className="group-page__summary-label">Total Groups</div>
+                        </div>
+
+                        <div className="group-page__summary-join">
+                            <div className="group-page__summary-join-title">Join a group</div>
+                            <form className="group-page__summary-form" onSubmit={handleJoinGroup}>
+                                <div className="group-page__form-group">
+                                    <input
+                                        id="joinCode"
+                                        type="text"
+                                        className="group-page__input"
+                                        value={joinCode}
+                                        onChange={(e) => setJoinCode(e.target.value)}
+                                        placeholder="Enter join code"
+                                        maxLength={100}
+                                    />
+                                </div>
+
+                                <button
+                                    type="submit"
+                                    className="group-page__create-button group-page__summary-button"
+                                    disabled={joinLoading}
+                                >
+                                    {joinLoading ? "Joining..." : "Join Group"}
+                                </button>
+                            </form>
+
+                            {joinError && (
+                                <div className="group-page__state group-page__error group-page__summary-message">
+                                    Error: {joinError}
+                                </div>
+                            )}
+
+                            {joinSuccess && (
+                                <div className="group-page__state group-page__success group-page__summary-message">
+                                    {joinSuccess}
+                                </div>
+                            )}
                         </div>
                     </div>
                 </section>
 
+                <div className="group-page__forms-grid">
                 <section className="group-page__create-card">
                     <div className="group-page__create-header">
                         <div className="group-page__eyebrow">Create Group</div>
@@ -212,6 +289,7 @@ export default function GroupPage() {
                         )}
                     </form>
                 </section>
+                </div>
 
                 {loading && <div className="group-page__state">Loading groups...</div>}
                 {!loading && error && <div className="group-page__state group-page__error">Error: {error}</div>}

@@ -1,8 +1,8 @@
-import { Link } from "react-router-dom";
 import { useEffect, useMemo, useState } from "react";
 import { getMyTips, type TipResponse } from "../api/tipApi";
 import { useAuth } from "../context/AuthContext";
 import "./MyTipsPage.css";
+import NavigationMenu from "../components/NavigationMenu.tsx";
 
 export default function MyTipsPage() {
     const { token } = useAuth();
@@ -57,16 +57,7 @@ export default function MyTipsPage() {
                 </div>
 
                 <nav className="my-tips-page__nav">
-                    <Link to="/" className="my-tips-page__nav-link">Home</Link>
-                    <Link to="/matches" className="my-tips-page__nav-link">Matches</Link>
-                    <Link to="/leaderboard" className="my-tips-page__nav-link">Leaderboard</Link>
-                    <Link to="/my-tips" className="my-tips-page__nav-link my-tips-page__nav-link--active">
-                        My Tips
-                    </Link>
-                    <Link to="/profile" className="my-tips-page__nav-link">Profile</Link>
-                    <Link to="/groups" className="group-page__nav-link">
-                        My Groups
-                    </Link>
+                    <NavigationMenu />
                 </nav>
             </header>
 

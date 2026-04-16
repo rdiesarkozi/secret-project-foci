@@ -76,3 +76,17 @@ export async function register(payload: RegisterRequest): Promise<RegisterRespon
 
     return (data as RegisterResponse) ?? {};
 }
+export async function googleLogin(credential: string): Promise<{ token: string }> {
+    const response = await fetch("http://localhost:5256/api/Auth/google-login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ idToken: credential }),
+    });
+
+    if (!response.ok) {
+        const data = await response.json().catch(() => null);
+        throw new Error(data?.message || "Google login failed");
+    }
+
+    return response.json();
+}

@@ -4,7 +4,7 @@
     overflow: hidden;
     background:
             radial-gradient(circle at top left, rgba(34, 197, 94, 0.14), transparent 30%),
-            radial-gradient(circle at bottom right, rgba(2, 22, 158, 0.12), transparent 35%),
+            radial-gradient(circle at bottom right, rgb(255, 215, 0), transparent 35%),
             linear-gradient(135deg, #e10d0d 0%, #111827 45%, #1e293b 100%);
     color: #f8fafc;
     font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
@@ -163,7 +163,7 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    gap: 20px;
+    gap: 5px;
 }
 
 .group-page__summary-badge {
@@ -176,6 +176,7 @@
     font-size: 12px;
     font-weight: 700;
     text-transform: uppercase;
+    letter-spacing: 0.08em;
 }
 
 .group-page__summary-value {
@@ -189,8 +190,45 @@
     font-size: 14px;
 }
 
+.group-page__summary-stat {
+    display: grid;
+}
+
+.group-page__summary-join {
+    display: grid;
+    gap: 14px;
+    margin-top: 8px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.group-page__summary-join-title {
+    color: #f8fafc;
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+.group-page__summary-form {
+    display: grid;
+    gap: 14px;
+}
+
+.group-page__summary-button {
+    width: 100%;
+    justify-content: center;
+}
+
+.group-page__summary-message {
+    padding: 14px 16px;
+    border-radius: 16px;
+    font-size: 0.95rem;
+}
+
 .group-page__list-wrap {
-    padding: 28px;
+
+    max-height: 80vh;
+    overflow-y: auto;
+    padding-right: 8px;
 }
 
 .group-page__list {
@@ -388,5 +426,15 @@
     .group-page__item-content {
         flex-direction: column;
         align-items: flex-start;
+    }
+}
+
+@media (max-width: 640px) {
+    .group-page__forms-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        align-items: start;
+        gap: 28px;
+        margin-bottom: 28px;
     }
 }

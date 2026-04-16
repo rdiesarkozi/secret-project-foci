@@ -3,9 +3,10 @@
     min-height: 100vh;
     overflow: hidden;
     background:
-            radial-gradient(circle at top left, rgba(34, 197, 94, 0.14), transparent 30%),
-            radial-gradient(circle at bottom right, rgba(2, 22, 158, 0.12), transparent 35%),
-            linear-gradient(135deg, #e10d0d 0%, #111827 45%, #1e293b 100%);
+            radial-gradient(circle at top left, rgba(34, 197, 94, 0.52), transparent 34%),
+            radial-gradient(circle at bottom right, rgba(246, 205, 0, 0.98), transparent 40%),
+            radial-gradient(circle at center top, rgba(255, 255, 255, 0.08), transparent 36%),
+            linear-gradient(135deg, #ff0000 0%, #374151 45%, #475569 100%);
     color: #f8fafc;
     font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
@@ -16,6 +17,25 @@
     filter: blur(10px);
     pointer-events: none;
     opacity: 0.5;
+}
+
+.my-matches-page__list-wrapper {
+    max-height: 80vh;
+    overflow-y: auto;
+    padding-right: 8px;
+}
+
+.my-matches-page__list-wrapper::-webkit-scrollbar {
+    width: 8px;
+}
+
+.my-matches-page__list-wrapper::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 9999px;
+}
+
+.my-matches-page__list-wrapper::-webkit-scrollbar-track {
+    background: transparent;
 }
 
 .matches-page__bg-circle--top {
@@ -139,7 +159,7 @@
 
 .matches-page__title {
     margin: 0 0 18px;
-    font-size: 46px;
+    font-size: 30px;
     line-height: 1.08;
     font-weight: 800;
     color: #ffffff;
@@ -147,7 +167,7 @@
 
 .matches-page__description {
     margin: 0;
-    font-size: 17px;
+    font-size: 15px;
     line-height: 1.7;
     color: rgba(226, 232, 240, 0.9);
 }
@@ -481,7 +501,7 @@
     }
 }
 
-@media (max-width: 640px) {
+@media (max-width: 560px) {
     .matches-page__header,
     .matches-page__content {
         padding-left: 20px;

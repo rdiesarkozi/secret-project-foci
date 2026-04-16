@@ -52,6 +52,8 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
     {
         options.Password.RequireDigit = true;
         options.Password.RequiredLength = 8;
+        options.Password.RequireUppercase = true;
+        options.Password.RequireLowercase = true;
     })
     .AddEntityFrameworkStores<AppDbContext>()
     .AddDefaultTokenProviders();
@@ -74,6 +76,11 @@ builder.Services.AddAuthentication(options =>
             IssuerSigningKey = new SymmetricSecurityKey(
                 Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!))
         };
+    })
+    .AddGoogle(options =>
+    {
+        options.ClientId = builder.Configuration["Authentication:Google:ClientId"] ?? throw new InvalidOperationException();
+        options.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"] ?? throw new InvalidOperationException();
     })
     .Services.AddStackExchangeRedisCache(options =>
     {
@@ -122,6 +129,13 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseCors(localFrontendCorsPolicy);
+
+app.Use(async (context, next) =>
+{
+    context.Response.Headers["Cross-Origin-Opener-Policy"] = "same-origin-allow-popups";
+    await next();
+});
+
 app.UseAuthentication(); 
 app.UseAuthorization();
 

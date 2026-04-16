@@ -1,0 +1,359 @@
+.theme-toggle {
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: rgba(255, 255, 255, 0.08);
+    font-size: 20px;
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+    transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.theme-toggle:hover {
+    background: rgba(255, 255, 255, 0.14);
+}
+
+.light-mode .theme-toggle {
+    border-color: rgba(0, 0, 0, 0.1);
+    background: rgba(0, 0, 0, 0.05);
+}
+
+.light-mode .theme-toggle:hover {
+    background: rgba(0, 0, 0, 0.1);
+}
+
+/* ===== GLOBAL LIGHT-MODE SHARED OVERRIDES ===== */
+
+/* Glass cards used across all pages */
+.light-mode .matches-page__hero-copy,
+.light-mode .matches-page__summary-card,
+.light-mode .matches-page__card,
+.light-mode .my-tips-page__hero-copy,
+.light-mode .home-page__hero-copy,
+.light-mode .home-page__hero-card,
+.light-mode .group-page__hero-copy,
+.light-mode .group-page__create-card,
+.light-mode .group-page__summary-card,
+.light-mode .my-tips-page__summary-card,
+.light-mode .my-tips-page__card,
+.light-mode .my-tips-page__state,
+.light-mode .my-tips-page__error,
+.light-mode .leaderboard-page__hero-copy,
+.light-mode .leaderboard-page__summary-card,
+.light-mode .leaderboard-page__table-wrap,
+.light-mode .profile-page__card {
+    background: rgba(255, 255, 255, 0.88);
+    border-color: rgba(0, 0, 0, 0.08);
+    box-shadow: 0 18px 60px rgba(0, 0, 0, 0.08);
+    backdrop-filter: blur(18px);
+}
+
+/* Primary text */
+.light-mode .matches-page__title,
+.light-mode .my-tips-page__title,
+.light-mode .group-page__item-title,
+.light-mode .leaderboard-page__table-title,
+.light-mode .leaderboard-page__player-name,
+.light-mode .leaderboard-page__avatar,
+.light-mode .leaderboard-page__player,
+.light-mode .leaderboard-page__player-name,
+.light-mode .leaderboard-page__points-value,
+.light-mode .group-page__create-title,
+.light-mode .group-page__summary-join-title,
+.light-mode .leaderboard-page__title,
+.light-mode .profile-page__title,
+.light-mode .home-page__card-title,
+.light-mode .group-page__title,
+.light-mode .home-page__title,
+.light-mode .matches-page__team__home,
+.light-mode .matches-page__team__away,
+.light-mode .my-tips-page__team,
+.light-mode .matches-page__summary-value,
+.light-mode .group-page__summary-value,
+.light-mode .my-tips-page__summary-value,
+.light-mode .leaderboard-page__summary-value,
+.light-mode .profile-page__stat-value,
+.light-mode .home-page__stat-value,
+.light-mode .profile-page__section-title,
+.light-mode .matches-page__brand-name,
+.light-mode .my-tips-page__brand-name,
+.light-mode .leaderboard-page__brand-name,
+.light-mode .profile-page__brand-name,
+.light-mode .my-tips-page__prediction,
+.light-mode .profile-page__info-value,
+.light-mode .profile-page__activity-title {
+    color: #18212f;
+}
+
+/* Secondary / description text */
+.light-mode .matches-page__description,
+.light-mode .my-tips-page__description,
+.light-mode .group-page__description,
+.light-mode .leaderboard-page__description,
+.light-mode .profile-page__description,
+.light-mode .matches-page__summary-label,
+.light-mode .my-tips-page__summary-label,
+.light-mode .home-page__stat-label,
+.light-mode .home-page__card-text,
+.light-mode .matches-page__filter-label,
+.light-mode .home-page__description,
+.light-mode .leaderboard-page__points-label,
+.light-mode .leaderboard-page__summary-label,
+.light-mode .group-page__summary-label,
+.light-mode .profile-page__stat-label,
+.light-mode .matches-page__date,
+.light-mode .my-tips-page__date,
+.light-mode .my-tips-page__meta,
+.light-mode .group-page__item-meta,
+.light-mode .matches-page__vs,
+.light-mode .profile-page__info-label,
+.light-mode .profile-page__activity-time,
+.light-mode .matches-page__group-meta {
+    color: #475569;
+}
+
+.light-mode .home-page__secondary-button{
+    color: #18212f;
+    border-color: rgba(0, 0, 0, 0.1);
+    background: rgba(0, 0, 0, 0.05);
+}
+
+.light-mode .home-page__stat{
+    background: rgba(0, 0, 0, 0.05);
+    border-color: rgba(0, 0, 0, 0.1);
+}
+
+/* Brand labels */
+.light-mode .matches-page__brand-label,
+.light-mode .leaderboard-page__brand-label{
+    color: rgba(30, 41, 59, 0.6);
+}
+
+/* Inputs (matches page prediction inputs) */
+.light-mode .matches-page__prediction-input {
+    background: #ffffff;
+    border-color: #d0d5dd;
+    color: #18212f;
+}
+
+.light-mode .matches-page__prediction-input:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.12);
+}
+
+.light-mode .matches-page__prediction-input:disabled {
+    background: #f1f5f9;
+    color: #64748b;
+}
+
+/* Filter select */
+.light-mode .matches-page__filter-select {
+    background: #ffffff;
+    border-color: #d0d5dd;
+    color: #18212f;
+}
+
+.light-mode .matches-page__filter-select:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.12);
+}
+
+.light-mode .group-page__item{
+    background: rgba(255, 255, 255, 0.88);
+    border-color: rgba(0, 0, 0, 0.08);
+    box-shadow: 0 18px 60px rgba(0, 0, 0, 0.08);
+    backdrop-filter: blur(18px);
+}
+
+/* Prediction area */
+.light-mode .matches-page__prediction {
+    background: rgba(241, 245, 249, 0.8);
+    border-color: rgba(0, 0, 0, 0.06);
+}
+
+.light-mode .matches-page__prediction-score {
+    background: rgba(241, 245, 249, 0.9);
+    border-color: rgba(0, 0, 0, 0.06);
+}
+
+.light-mode .matches-page__prediction-label {
+    color: #64748b;
+}
+
+.light-mode .matches-page__prediction-separator {
+    color: #475569;
+}
+
+/* Status badges – keep readable on light backgrounds */
+.light-mode .matches-page__status {
+    background: rgba(59, 130, 246, 0.1);
+    color: #2563eb;
+}
+
+.light-mode .matches-page__status--warning {
+    background: rgba(245, 158, 11, 0.12);
+    color: #b45309;
+}
+
+.light-mode .matches-page__prediction-state {
+    background: rgba(59, 130, 246, 0.1);
+    color: #2563eb;
+}
+
+.light-mode .matches-page__prediction-state--saved {
+    background: rgba(34, 197, 94, 0.1);
+    color: #15803d;
+}
+
+.light-mode .matches-page__prediction-state--locked {
+    background: rgba(100, 116, 139, 0.12);
+    color: #475569;
+}
+
+/* My Tips status badges */
+.light-mode .my-tips-page__status {
+    background: rgba(59, 130, 246, 0.1);
+    color: #2563eb;
+}
+
+.light-mode .my-tips-page__status--closed {
+    background: rgba(34, 197, 94, 0.1);
+    color: #15803d;
+}
+
+.light-mode .my-tips-page__status--pending {
+    background: rgba(245, 158, 11, 0.12);
+    color: #b45309;
+}
+
+.light-mode .my-tips-page__prediction {
+    background: rgba(241, 245, 249, 0.9);
+}
+
+/* Leaderboard table */
+.light-mode .leaderboard-page__table-header {
+    background: rgba(228, 228, 230);
+    color: #475569;
+}
+
+.light-mode .leaderboard-page__row {
+    border-bottom-color: rgba(0, 0, 0, 0.06);
+}
+
+.light-mode .leaderboard-page__row:hover {
+    background: rgba(59, 130, 246, 0.04);
+}
+
+.light-mode .leaderboard-page__rank {
+    color: #18212f;
+}
+
+.light-mode .leaderboard-page__username {
+    color: #18212f;
+}
+
+.light-mode .leaderboard-page__points {
+    color: #18212f;
+}
+
+.light-mode .leaderboard-page__change--up {
+    background: rgba(34, 197, 94, 0.1);
+    color: #15803d;
+}
+
+.light-mode .leaderboard-page__change--down {
+    background: rgba(239, 68, 68, 0.1);
+    color: #dc2626;
+}
+
+.light-mode .leaderboard-page__change--neutral {
+    background: rgba(100, 116, 139, 0.1);
+    color: #475569;
+}
+
+/* Eyebrow colors stay green */
+.light-mode .matches-page__eyebrow,
+.light-mode .my-tips-page__eyebrow{
+    color: #16a34a;
+}
+
+/* Summary badges */
+.light-mode .matches-page__summary-badge,
+.light-mode .my-tips-page__summary-badge,
+.light-mode .group-page__summary-badge,
+.light-mode .home-page__card-badge{
+    background: rgba(34, 197, 94, 0.1);
+    color: #15803d;
+}
+
+/* Profile-specific light overrides */
+.light-mode .profile-page__eyebrow,
+.light-mode .home-page__eyebrow{
+    color: #16a34a;
+}
+
+.light-mode .profile-page__badge {
+    background: rgba(34, 197, 94, 0.1);
+    color: #15803d;
+}
+
+.light-mode .profile-page__stat,
+.light-mode .profile-page__info-item,
+.light-mode .profile-page__activity-item {
+    background: rgba(241, 245, 249, 0.8);
+    border-color: rgba(0, 0, 0, 0.06);
+}
+
+.light-mode .profile-page__avatar {
+    box-shadow: 0 12px 30px rgba(59, 130, 246, 0.15);
+}
+
+.light-mode .login-page__label{
+    color: #18212f;
+}
+
+.light-mode .login-page__input{
+    background: #ffffff;
+    border-color: #d0d5dd;
+    color: #18212f;
+}
+
+.light-mode .group-page__list-wrap{
+    background: rgba(255, 255, 255, 0.88);
+    border-color: rgba(0, 0, 0, 0.08);
+    box-shadow: 0 18px 60px rgba(0, 0, 0, 0.08);
+    backdrop-filter: blur(18px);
+}
+
+.light-mode .login-page__form-panel{
+    background: rgba(255, 255, 255, 0.88);
+    border-color: rgba(0, 0, 0, 0.08);
+    box-shadow: 0 18px 60px rgba(0, 0, 0, 0.08);
+    backdrop-filter: blur(18px);
+}
+
+.light-mode .login-page__input:focus{
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.12);
+}
+
+/* Scrollbar */
+.light-mode .my-matches-page__list-wrapper::-webkit-scrollbar-thumb,
+.light-mode .my-tips-page__list-wrapper::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.15);
+}
+
+/* State / error cards in light mode */
+.light-mode .matches-page__state {
+    color: #475569;
+}
+
+.light-mode .matches-page__error {
+    color: #dc2626;
+}
+
+.light-mode .my-tips-page__error {
+    color: #dc2626;
+}

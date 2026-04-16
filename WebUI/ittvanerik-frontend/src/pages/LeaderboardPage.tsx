@@ -2,6 +2,7 @@ import {Link, useSearchParams} from "react-router-dom";
 import { useEffect, useMemo, useState } from "react";
 import { getOverallLeaderboard, type LeaderboardEntry } from "../api/leaderboardApi";
 import "./LeaderboardPage.css";
+import ThemeToggle from "../components/ThemeToggle.tsx";
 
 export default function LeaderboardPage() {
     const [searchParams] = useSearchParams();
@@ -64,6 +65,7 @@ export default function LeaderboardPage() {
                     <Link to="/groups" className="group-page__nav-link">
                         My Groups
                     </Link>
+                    <ThemeToggle />
                 </nav>
             </header>
 
@@ -115,7 +117,7 @@ export default function LeaderboardPage() {
                                             <div className="leaderboard-page__player-name">
                                                 {player.username}
                                             </div>
-                                            <div className="leaderboard-page__player-meta">
+                                            <div className="»">
                                                 Group competitor
                                             </div>
                                         </div>
