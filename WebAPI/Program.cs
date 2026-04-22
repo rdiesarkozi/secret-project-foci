@@ -40,6 +40,8 @@ builder.Services.AddScoped<IGroupService, GroupService>();
 builder.Services.AddScoped<ILeaderboardService, LeaderboardService>();
 builder.Services.AddScoped<IGoalScorerService, GoalScorerService>();
 builder.Services.AddScoped<IRawGoalScorerToDtoMapper, RawGoalScorerToDtoMapper>();
+builder.Services.AddScoped<IRawTeamDataToDtoMapper, RawTeamDataToDtoMapper>();
+builder.Services.AddScoped<ITeamService, TeamService>();
 
 builder.Services.AddControllers()
     .AddJsonOptions(options =>

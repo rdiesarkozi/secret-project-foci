@@ -16,4 +16,6 @@ public interface ISportsApiClient
     Task<RawFixturesResponse> GetTheTopAssistsByLeagueAsync(int leagueId, int seasonByYear, CancellationToken cancellationToken);
     
     Task<RawFixturesResponse> GetTheWinnersOfTheLeagueAsync(int leagueId, int seasonByYear, CancellationToken cancellationToken);
+    
+    Task<RawTeamResponse> GetAllTeamsOfTheLeagueAsync(int leagueId, int seasonByYear, CancellationToken cancellationToken);
 }

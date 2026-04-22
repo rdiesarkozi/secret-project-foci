@@ -8,6 +8,7 @@ namespace WebAPI.Client;
 public class SportsApiClient : ISportsApiClient
 {
     private const string ApiKey = "d5d539f3bcf60e8c70fbe510e5debcb2"; // Move to configuration
+    private const string BaseUrl = "https://v3.football.api-sports.io";
     
     public Task<RawFixturesResponse> GetUpcomingFixturesAsync(int leagueId)
     {
@@ -16,7 +17,7 @@ public class SportsApiClient : ISportsApiClient
 
     public async Task<RawFixturesResponse> GetAllFixturesByLeagueAsync(int leagueId, int seasonByYear, CancellationToken cancellationToken)
     {
-        var options = new RestClientOptions("https://v3.football.api-sports.io")
+        var options = new RestClientOptions(BaseUrl)
         {
             Timeout = TimeSpan.FromMinutes(1)
         };
@@ -48,7 +49,7 @@ public class SportsApiClient : ISportsApiClient
     public async Task<RawFixturesResponse> GetTheUpcomingFixturesByLeagueAsync(int leagueId, int seasonByYear, int next,
         CancellationToken cancellationToken)
     {
-        var options = new RestClientOptions("https://v3.football.api-sports.io")
+        var options = new RestClientOptions(BaseUrl)
         {
             Timeout = TimeSpan.FromMinutes(1)
         };
@@ -80,7 +81,7 @@ public class SportsApiClient : ISportsApiClient
 
     public async Task<RawGoalScorerResponse> GetTheTopGoalScorersByLeagueAsync(int leagueId, int seasonByYear, CancellationToken cancellationToken)
     {
-        var options = new RestClientOptions("https://v3.football.api-sports.io")
+        var options = new RestClientOptions(BaseUrl)
         {
             Timeout = TimeSpan.FromMinutes(1)
         };
@@ -118,4 +119,35 @@ public class SportsApiClient : ISportsApiClient
     {
         throw new NotImplementedException();
     }
-}
+
+    public async Task<RawTeamResponse> GetAllTeamsOfTheLeagueAsync(int leagueId, int seasonByYear, CancellationToken cancellationToken)
+    {
+        var options = new RestClientOptions(BaseUrl)
+        {
+            Timeout = TimeSpan.FromMinutes(1)
+        };
+        
+        var client = new RestClient(options);
+        var request = new RestRequest("/teams", Method.Get);
+        request.AddHeader("x-apisports-key", ApiKey);
+        request.AddQueryParameter("league", leagueId.ToString());
+        request.AddQueryParameter("season", seasonByYear.ToString());
+        
+        var response = await client.ExecuteAsync(request, cancellationToken);
+        
+        var jsonOptions = new JsonSerializerOptions
+        {
+            PropertyNameCaseInsensitive = true
+        };
+        
+        Console.WriteLine(response.Content);
+        
+        if (response.IsSuccessful && !string.IsNullOrEmpty(response.Content))
+        {
+            var teamsResponse = JsonSerializer.Deserialize<RawTeamResponse>(response.Content, jsonOptions);
+            return teamsResponse;
+        }
+        
+        throw new Exception($"API request failed with status code {response.StatusCode}: {response.Content}");
+    }
+} 
