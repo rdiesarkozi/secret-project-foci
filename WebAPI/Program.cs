@@ -38,6 +38,8 @@ builder.Services.AddScoped<IRawFixturesToDtoMapper, RawFixturesToDtoMapper>();
 builder.Services.AddScoped<ITipService, TipService>();
 builder.Services.AddScoped<IGroupService, GroupService>();
 builder.Services.AddScoped<ILeaderboardService, LeaderboardService>();
+builder.Services.AddScoped<IGoalScorerService, GoalScorerService>();
+builder.Services.AddScoped<IRawGoalScorerToDtoMapper, RawGoalScorerToDtoMapper>();
 
 builder.Services.AddControllers()
     .AddJsonOptions(options =>

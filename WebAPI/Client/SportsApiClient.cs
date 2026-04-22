@@ -1,5 +1,6 @@
 using System.Text.Json;
 using RestSharp;
+using WebAPI.Models;
 using WebAPI.Models.RawFixtureResponse;
 
 namespace WebAPI.Client;
@@ -77,9 +78,35 @@ public class SportsApiClient : ISportsApiClient
         throw new Exception($"API request failed with status code {response.StatusCode}: {response.Content}");
     }
 
-    public Task<RawFixturesResponse> GetTheTopGoalScorersByLeagueAsync(int leagueId, int seasonByYear, CancellationToken cancellationToken)
+    public async Task<RawGoalScorerResponse> GetTheTopGoalScorersByLeagueAsync(int leagueId, int seasonByYear, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        var options = new RestClientOptions("https://v3.football.api-sports.io")
+        {
+            Timeout = TimeSpan.FromMinutes(1)
+        };
+
+        var client = new RestClient(options);
+        var request = new RestRequest("/players/topscorers", Method.Get);
+        request.AddHeader("x-apisports-key", ApiKey);
+        request.AddQueryParameter("league", leagueId.ToString());
+        request.AddQueryParameter("season", seasonByYear.ToString());
+
+        var response = await client.ExecuteAsync(request, cancellationToken);
+
+        var jsonOptions = new JsonSerializerOptions
+        {
+            PropertyNameCaseInsensitive = true
+        };
+
+        Console.WriteLine(response.Content);
+
+        if (response.IsSuccessful && !string.IsNullOrEmpty(response.Content))
+        {
+            var topScorersResponse = JsonSerializer.Deserialize<RawGoalScorerResponse>(response.Content, jsonOptions);
+            return topScorersResponse;
+        }
+
+        throw new Exception($"API request failed with status code {response.StatusCode}: {response.Content}");
     }
 
     public Task<RawFixturesResponse> GetTheTopAssistsByLeagueAsync(int leagueId, int seasonByYear, CancellationToken cancellationToken)

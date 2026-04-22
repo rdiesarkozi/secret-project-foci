@@ -1,3 +1,4 @@
+using WebAPI.Models;
 using WebAPI.Models.RawFixtureResponse;
 
 namespace WebAPI.Client;
@@ -10,7 +11,7 @@ public interface ISportsApiClient
     
     Task<RawFixturesResponse> GetTheUpcomingFixturesByLeagueAsync(int leagueId, int seasonByYear, int numberOfNextMatches, CancellationToken cancellationToken);
     
-    Task<RawFixturesResponse> GetTheTopGoalScorersByLeagueAsync(int leagueId, int seasonByYear, CancellationToken cancellationToken);
+    Task<RawGoalScorerResponse> GetTheTopGoalScorersByLeagueAsync(int leagueId, int seasonByYear, CancellationToken cancellationToken);
     
     Task<RawFixturesResponse> GetTheTopAssistsByLeagueAsync(int leagueId, int seasonByYear, CancellationToken cancellationToken);
     
