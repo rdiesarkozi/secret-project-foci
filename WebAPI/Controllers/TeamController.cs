@@ -17,7 +17,7 @@ public class TeamController : ControllerBase
         _teamService = teamService;
     }
     
-    [HttpGet("teams/raw")]
+    [HttpGet("get-all-teams-raw")]
     public async Task<IActionResult> GetAllTeamsOfTheLeague([FromQuery] int league = 39, [FromQuery] int season = 2022)
     {
         var teams = await _sportsApiClient.GetAllTeamsOfTheLeagueAsync(league, season, CancellationToken.None);
@@ -30,12 +30,15 @@ public class TeamController : ControllerBase
         return Ok(teams);
     }
     
-    [HttpGet("teams")]
+    [HttpGet("get-all-teams")]
     public async Task<IActionResult> GetAllTeamsOfTheLeagueFromService([FromQuery] int league = 39, [FromQuery] int season = 2022)
     {
-        var teams = await _teamService.GetAllTeamDataByLeague(season, league);
+        var teams = await _teamService.GetAllTeamDataByLeague(league, season);
         
-        
+        if (teams == null || !teams.Any())
+        {
+            return NotFound("No teams found for the specified league and season.");
+        }
         
         return Ok(teams);
     }

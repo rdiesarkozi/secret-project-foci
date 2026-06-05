@@ -20,7 +20,7 @@ public class TipController : ControllerBase
         _tipService = tipService;
     }
 
-    [HttpPost("create")]
+    [HttpPost("create-tip")]
     public async Task<IActionResult> CreateTip(int fixtureId, int leagueId, int seasonId, int homeScoreTip, int awayScoreTip)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -63,7 +63,7 @@ public class TipController : ControllerBase
         }
     }
     
-    [HttpGet("get")]
+    [HttpGet("get-tips")]
     public async Task<IActionResult> GetTipByUser()
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -81,7 +81,7 @@ public class TipController : ControllerBase
         return Ok(tip);
     }
 
-    [HttpDelete("delete")]
+    [HttpDelete("tip-delete")]
     public async Task<IActionResult> DeleteTip(int fixtureId)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -107,7 +107,7 @@ public class TipController : ControllerBase
         }
     }
 
-    [HttpPut("update")]
+    [HttpPut("tip-update")]
     public async Task<IActionResult> UpdateTip(int fixtureId, int homeScoreTip, int awayScoreTip)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -137,7 +137,7 @@ public class TipController : ControllerBase
         }
     }
 
-    [HttpGet("calculate")]
+    [HttpGet("calculate-points")]
     public async Task<IActionResult> CalculatePointsForCompletedMatches()
     {
         try

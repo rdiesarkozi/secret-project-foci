@@ -14,7 +14,7 @@ public class LeaderboardController : ControllerBase
         _leaderboardService = leaderboardService;
     }
 
-    [HttpGet("overall")]
+    [HttpGet("get-overall-leaderboard")]
     public async Task<IActionResult> GetGroupLeaderboardAsync(Guid groupId)
     {
         var leaderboard = await _leaderboardService.GetLeaderboardAsync(groupId);

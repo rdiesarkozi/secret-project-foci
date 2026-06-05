@@ -21,10 +21,15 @@ public class TipService : ITipService
     public async Task CreateTipAsync(int fixtureId, string userId, int leagueId, int season, int homeScoreTip, int awayScoreTip)
     {
         var matchResult = await _footballApiService.GetFixturesResultByMatchIdAsync(fixtureId, leagueId, season);
+        
+        _logger.LogInformation("Fetched match result for fixture {FixtureId}: Status={Status}, FixtureDate={FixtureDate:o}, FixtureDateKind={FixtureDateKind}",
+            fixtureId, matchResult.Status, matchResult.FixtureDate, matchResult.FixtureDate.Kind);
 
         var kickoffUtc = matchResult.FixtureDate.Kind == DateTimeKind.Utc
             ? matchResult.FixtureDate
             : matchResult.FixtureDate.ToUniversalTime();
+        
+        _logger.LogInformation("Kickoff time in UTC for fixture {FixtureId}: {KickoffUtc:o}", fixtureId, kickoffUtc);
 
         var lockTimeUtc = DateTime.SpecifyKind(kickoffUtc.AddMinutes(-1), DateTimeKind.Utc);
         var dateTimeUtcNow = DateTime.UtcNow;
@@ -74,10 +79,12 @@ public class TipService : ITipService
         };
 
         _dbContext.Tips.Add(tip);
+        _logger.LogInformation("Add tips for the fixture {FixtureId}, user {UserId}", fixtureId, userId);
 
         try
         {
             await _dbContext.SaveChangesAsync();
+            _logger.LogInformation("Save changes in the database for fixture {FixtureId}, user {UserId}", fixtureId, userId);
         }
         catch (Exception ex)
         {
@@ -97,6 +104,9 @@ public class TipService : ITipService
     {
         var tip = await _dbContext.Tips
             .FirstOrDefaultAsync(t => t.MatchId == fixtureId && t.UserId == userId);
+        
+        _logger.LogInformation("Attempting to update tip for fixture {FixtureId}, user {UserId}. Tip found: {TipFound}",
+            fixtureId, userId, tip != null);
 
         if (tip == null)
         {
@@ -124,8 +134,11 @@ public class TipService : ITipService
         tip.PredictedHomeScore = parsedHome;
         tip.PredictedAwayScore = parsedAway;
         tip.SubmittedAtUtc = DateTime.UtcNow;
-
+        
         _dbContext.Tips.Update(tip);
+        
+        _logger.LogInformation("Updated tip for fixture {FixtureId}, user {UserId}", fixtureId, userId);
+
         await _dbContext.SaveChangesAsync();
     }
 
@@ -133,6 +146,9 @@ public class TipService : ITipService
     {
         var tip = await _dbContext.Tips
             .FirstOrDefaultAsync(t => t.MatchId == fixtureId && t.UserId == userId);
+        
+        _logger.LogInformation("Attempting to delete tip for fixture {FixtureId}, user {UserId}. Tip found: {TipFound}",
+            fixtureId, userId, tip != null);
 
         if (tip == null)
         {
@@ -146,16 +162,22 @@ public class TipService : ITipService
         }
 
         _dbContext.Tips.Remove(tip);
+        _logger.LogInformation("Deleted tip for fixture {FixtureId}, user {UserId}", fixtureId, userId);
         await _dbContext.SaveChangesAsync();
     }
 
     public async Task<Tip> GetTipByIdAsync(int fixtureId, string userId)
     {
         var tip = await _dbContext.Tips.FirstOrDefaultAsync(t => t.MatchId == fixtureId && t.UserId == userId);
+        _logger.LogInformation("Fetching tip for fixture {FixtureId}, user {UserId}. Tip found: {TipFound}",
+            fixtureId, userId, tip != null);
+        
         if (tip == null)
         {
             throw new InvalidOperationException("Tip not found.");
         }
+        
+        _logger.LogInformation("Fetched tip for fixture {FixtureId}, user {UserId}", fixtureId, userId);
         return tip;
     }
 
@@ -172,6 +194,8 @@ public class TipService : ITipService
         var pendingTips = await _dbContext.Tips
             .Where(t => t.ResultStatus == ResultStatus.NotStarted.ToString())
             .ToListAsync();
+        
+        _logger.LogInformation("Calculating points for completed matches");
 
         // Collect user points to update
         var userPointsToAdd = new Dictionary<string, int>();
@@ -197,6 +221,8 @@ public class TipService : ITipService
                     userPointsToAdd[tip.UserId] = tip.AwardedPoints.Value;
             }
         }
+        
+        _logger.LogInformation("Calculated points for completed matches");
 
         // Update GroupMember points for all affected users
         foreach (var (userId, points) in userPointsToAdd)
@@ -210,6 +236,8 @@ public class TipService : ITipService
                 member.Points += points;
             }
         }
+        
+        _logger.LogInformation("Update GroupMember points for all affected users");
 
         await _dbContext.SaveChangesAsync();
     }
@@ -237,6 +265,9 @@ public class TipService : ITipService
         var actualOutcome = GetMatchOutcome(actualHome, actualAway);
         var predictedOutcome = GetMatchOutcome(predictedHome, predictedAway);
         
+        _logger.LogInformation("Calculating points for tip {TipId}. Actual: {ActualHome}-{ActualAway}, Predicted: {PredictedHome}-{PredictedAway}, ActualOutcome: {ActualOutcome}, PredictedOutcome: {PredictedOutcome}",
+            tip.Id, actualHome, actualAway, predictedHome, predictedAway, actualOutcome, predictedOutcome);
+        
         if (actualOutcome == predictedOutcome)
         {
             var actualGoalDifference = actualHome - actualAway;
@@ -252,6 +283,8 @@ public class TipService : ITipService
             points = 4;
         }
         
+        _logger.LogInformation("Points after outcome check for tip {TipId}: {Points}", tip.Id, points);
+        
         // Correct goals for one team: 1 point each
         if (actualHome == predictedHome)
         {
@@ -261,6 +294,8 @@ public class TipService : ITipService
         {
             points += 1;
         }
+        
+        _logger.LogInformation("Calculating points for tip {TipId}: {Points}", tip.Id, points);
         
         return points;
     }

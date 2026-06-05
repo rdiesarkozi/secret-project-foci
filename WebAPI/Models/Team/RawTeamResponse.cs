@@ -11,5 +11,5 @@ public class RawTeamResponse
     public int Results { get; set; }
 
     [JsonPropertyName("response")]
-    public List<TeamData> Response { get; set; } = new();
+    public List<TeamData> Response { get; set; }
 }

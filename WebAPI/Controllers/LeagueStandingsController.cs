@@ -17,7 +17,7 @@ public class LeagueStandingsController : ControllerBase
         _cache = cache;
     }
     
-    [HttpGet("standings")]
+    [HttpGet("get-league-standings")]
     public async Task<IActionResult> GetStandings([FromQuery] int league = 2, [FromQuery] int season = 2024)
     {
         var cacheKey = $"standings_{league}_{season}";

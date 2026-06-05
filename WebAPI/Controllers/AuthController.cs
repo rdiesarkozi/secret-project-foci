@@ -71,7 +71,7 @@ public class AuthController : ControllerBase
         {
             var settings = new GoogleJsonWebSignature.ValidationSettings
             {
-                Audience = new[] { _configuration["Authentication:Google:ClientId"] }
+                Audience = [_configuration["Authentication:Google:ClientId"]]
             };
             payload = await GoogleJsonWebSignature.ValidateAsync(request.IdToken, settings);
         }
@@ -100,7 +100,7 @@ public class AuthController : ControllerBase
         else
         {
             var logins = await _userManager.GetLoginsAsync(user);
-            if (!logins.Any(l => l.LoginProvider == "Google"))
+            if (logins.All(l => l.LoginProvider != "Google"))
             {
                 await _userManager.AddLoginAsync(user,
                     new UserLoginInfo("Google", payload.Subject, "Google"));

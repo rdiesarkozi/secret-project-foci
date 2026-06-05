@@ -17,7 +17,7 @@ public class GoalScorerController : ControllerBase
         _sportsApiClient = sportsApiClient;
     }
 
-    [HttpGet]
+    [HttpGet ("get-top-scorer")]
     public async Task<IActionResult> GetTopScorerOfTheLeague([FromQuery] int league = 39, [FromQuery] int season = 2022)
     {
         var GoalScorerData = await _goalScorerService.GetGoalScorersByLeagueAndSeasonAsync(league, season);

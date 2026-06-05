@@ -14,17 +14,18 @@ public class FixtureController : ControllerBase
         _fixtureDataService = fixtureDataService;
     }
 
-    [HttpGet("results")]
+    [HttpGet("get-fixture-result")]
     public async Task<IActionResult> GetFixtureResults([FromQuery] int league = 39, [FromQuery] int season = 2022)
     {
         var fixtureData = await _fixtureDataService.GetFixtureDataAsync(league, season);
         return Ok(fixtureData);
     }
 
-    [HttpGet("resultsbyid")]
+    [HttpGet("get-fixture-by-id")]
     public async Task<IActionResult> GetFixtureById([FromQuery] int fixtureId)
     {
         var fixtureData = await _fixtureDataService.GetFixtureDataByTeamAsync(fixtureId);
+        
         if (fixtureData == null)
         {
             return NotFound();
@@ -33,7 +34,7 @@ public class FixtureController : ControllerBase
         return Ok(fixtureData);
     }
 
-    [HttpGet("resultsbydate")]
+    [HttpGet("get-fixture-by-date")]
     public async Task<IActionResult> GetFixtureByDate([FromQuery] DateTime date, [FromQuery] int league = 39,
         [FromQuery] int season = 2022)
     {
@@ -41,10 +42,11 @@ public class FixtureController : ControllerBase
         return Ok(fixtureData);
     }
     
-    [HttpGet("resultsbymatchid")]
+    [HttpGet("get-result-by-match-id")]
     public async Task<IActionResult> GetFixtureByMatchId([FromQuery] long matchId, [FromQuery] int league = 39, [FromQuery] int season = 2022)
     {
         var fixtureData = await _fixtureDataService.GetFixturesResultByMatchIdAsync(matchId, league, season );
+        
         if (fixtureData == null)
         {
             return NotFound();
@@ -53,7 +55,7 @@ public class FixtureController : ControllerBase
         return Ok(fixtureData);
     }
     
-    [HttpGet("upcoming")]
+    [HttpGet("get-upcoming-fixtures")]
     public async Task<IActionResult> GetUpcomingFixtures([FromQuery] int league,[FromQuery] int season ,[FromQuery] int numberOfNextMatches)
     {
         if (league <= 0 || season <= 0 || numberOfNextMatches <= 0)

@@ -17,7 +17,7 @@ public class GroupController : ControllerBase
         _groupService = groupService;
     }
     
-    [HttpPost("create")]
+    [HttpPost("create-new-group")]
     public async Task<IActionResult> CreateNewGroupAsync([FromBody] CreateGroupRequestDto createGroupRequestDto)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -50,7 +50,7 @@ public class GroupController : ControllerBase
         });
     }
 
-    [HttpPost("join")]
+    [HttpPost("join-group-by-code/{joinCode}")]
     public async Task<IActionResult> JoinGroupByCodeAsync(string joinCode)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -76,7 +76,7 @@ public class GroupController : ControllerBase
         });
     }
 
-    [HttpGet("{groupId}")]
+    [HttpGet("get-group-by-id/{groupId}")]
     public async Task<IActionResult> GetGroupByIdAsync(Guid groupId)
     {
         var group = await _groupService.GetGroupById(groupId);
@@ -96,7 +96,7 @@ public class GroupController : ControllerBase
         });
     }
 
-    [HttpGet("my-groups")]
+    [HttpGet("get-user-groups")]
     public async Task<IActionResult> GetUserGroupsAsync()
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
